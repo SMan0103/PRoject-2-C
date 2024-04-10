@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <errno.h> // Include errno for perror
 
+#include "Terminal.c"
+
 
 struct nodeStack{
     int value;
@@ -54,32 +56,31 @@ int doesCardExists(const char *Filename) {
 // TODO Store last command
 // TODO Get from linked list
 
-int GameLoop(const char *str2[2]) {
+int GameLoop(char str2[4]) {
     const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
-    printf("Last Command: ", str2);
+    for(int i = 0; i < 8; i++){
+        printf("\t[]\t[]\t[]\t[]\t[]\t[]\t[]\n");
+    }
+
+
+    printf("Last Command: %s",str2);
     printf("\n Message:  \n");
     printf("Input > ");
 
     scanf("%s", str2);
     //TODO Make a try catch for length of string
 
-
-    if (strcmp(str2,"LD") == 0){
-        doesCardExists(Filename);
-    }
-    if (strcmp(str2, "STOP") == 0){
-        return 0;
-    }
+    GameCommands(str2);
     GameLoop(str2);
+
 }
 
 
 
 
 int main() {
-    char *str1[2];
     const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
@@ -87,19 +88,16 @@ int main() {
     printf("Message: \n");
     printf("\n Input > ");
 
+    char str1[4];
+
     scanf("%s", str1);
     //TODO Make a try catch for length of string
+    GameCommands( str1);
 
-
-    if (strcmp(str1,"LD") == 0){
-        doesCardExists(Filename);
-    }
-    if (strcmp(str1, "STOP") == 0){
-        return 0;
-    }
-    GameLoop(str1);
+    GameLoop( str1);
 
     struct nodeStack *head = NULL;
+    free(str1);
     freeLinkedList(head); // Free memory for the entire linked list
 
     return 0;
