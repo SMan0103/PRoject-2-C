@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <errno.h> // Include errno for perror
 
 #include "Terminal.c"
 
@@ -46,17 +44,17 @@ int doesCardExists(const char *Filename) {
 
 
 
-// TODO If <Cards.txt>  is not provided: A new, unshuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
+// TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
 
 
 // TODO Cards
-// TODO Shuffel card
+// TODO Shuffle card
 // TODO Split
 // TODO Did read Command
 // TODO Store last command
 // TODO Get from linked list
 
-int GameLoop(char str2[4]) {
+void GameLoop(char str2[4]) {
     const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 

@@ -8,5 +8,5 @@
 //#endif //UNTITLED1_MAIN_H
 
 int doesCardExists(const char *Filename);
-int GameLoop();
+void GameLoop();
 const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
