@@ -27,6 +27,7 @@ int GameCommands(char input[]) {
         printf("Invalid command\n");
 
     }
+    setMessage(0);
     GameLoop(input);
     return 0;
 }

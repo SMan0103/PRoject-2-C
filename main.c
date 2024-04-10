@@ -9,6 +9,21 @@ struct nodeStack{
     char name[2];
     struct nodeStack *next;
 };
+
+
+void setMessage(int value) {
+    if (value == 0){
+        Message[] = "Fail";
+    } else {
+        Message[] =  "OK";
+    }
+}
+
+char getMessage(){
+    return Message[6];
+}
+
+
 // Function to free memory recursively for the linked list - ChatGPT
 // TODO Remake this
 void freeLinkedList(struct nodeStack *head) {
@@ -30,7 +45,7 @@ int doesCardExists(const char *Filename) {
 
     if (outStream != NULL) {
         // File exists and successfully opened
-        printf("OK\n"); // Proper Error Message
+        setMessage(1); // Proper Message
         fclose(outStream);
         return 1; // Indicate that the file exists
     } else {
@@ -39,6 +54,9 @@ int doesCardExists(const char *Filename) {
         return 0; // Indicate that the file does not exist
     }
 }
+
+
+
 
 
 
@@ -64,7 +82,7 @@ void GameLoop(char str2[4]) {
 
 
     printf("Last Command: %s",str2);
-    printf("\n Message:  \n");
+    printf("\n Message:  %c %s", getMessage(), "\n");
     printf("Input > ");
 
     scanf("%s", str2);
@@ -83,7 +101,7 @@ int main() {
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");
-    printf("Message: \n");
+    printf("\n Message:  %c %s", getMessage(), "\n");
     printf("\n Input > ");
 
     char str1[4];
