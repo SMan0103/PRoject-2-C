@@ -11,4 +11,3 @@ int doesCardExists(const char *Filename);
 void GameLoop();
 const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
 void setMessage(int value);
-char Message[7];

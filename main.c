@@ -10,17 +10,19 @@ struct nodeStack{
     struct nodeStack *next;
 };
 
-
+char Message[7];
 void setMessage(int value) {
-    if (value == 0){
-        Message[] = "Fail";
+    char Ok[3] = "OK";
+    char fail[5] = "Fail";
+    if (value == 0) {
+        *Message = *fail;
     } else {
-        Message[] =  "OK";
+        *Message = *Ok;
     }
 }
 
 char getMessage(){
-    return Message[6];
+    return *Message;
 }
 
 
@@ -82,7 +84,7 @@ void GameLoop(char str2[4]) {
 
 
     printf("Last Command: %s",str2);
-    printf("\n Message:  %c %s", getMessage(), "\n");
+    printf("\n Message:  %C\n", getMessage());
     printf("Input > ");
 
     scanf("%s", str2);
