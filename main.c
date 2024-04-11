@@ -53,6 +53,9 @@ int doesCardExists(const char *Filename) {
         return 1; // Indicate that the file exists
     } else {
         // File does not exist or cannot be opened
+        // TODO make a new deck that is sorted
+        // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
+        setMessage(0);
         perror("Error opening file"); // Print system-specific error message
         return 0; // Indicate that the file does not exist
     }
@@ -64,7 +67,6 @@ int doesCardExists(const char *Filename) {
 
 
 
-// TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
 
 
 // TODO Cards
@@ -99,7 +101,7 @@ void GameLoop(char str2[4]) {
 
 
 int main() {
-    const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
+    //const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");
