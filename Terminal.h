@@ -3,3 +3,4 @@
 //
 
 int GameLoop();
+int GameCommands(char input[]);

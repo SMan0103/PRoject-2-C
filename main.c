@@ -12,8 +12,9 @@ struct nodeStack{
 
 char Message[7];
 void setMessage(int value) {
-    char Ok[3] = "OK";
+    char Ok[5] = "OK";
     char fail[5] = "Fail";
+
     if (value == 0) {
         *Message = *fail;
     } else {
@@ -21,8 +22,8 @@ void setMessage(int value) {
     }
 }
 
-char getMessage(){
-    return *Message;
+char *getMessage(){
+    return  Message;
 }
 
 
@@ -63,7 +64,6 @@ int doesCardExists(const char *Filename) {
 
 
 
-
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
 
 
@@ -75,7 +75,7 @@ int doesCardExists(const char *Filename) {
 // TODO Get from linked list
 
 void GameLoop(char str2[4]) {
-    const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
+    const char *Filename = "Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     for(int i = 0; i < 8; i++){
@@ -84,7 +84,7 @@ void GameLoop(char str2[4]) {
 
 
     printf("Last Command: %s",str2);
-    printf("\n Message:  %C\n", getMessage());
+    printf("\n Message:  %s\n", getMessage());
     printf("Input > ");
 
     scanf("%s", str2);
@@ -103,7 +103,7 @@ int main() {
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");
-    printf("\n Message:  %c %s", getMessage(), "\n");
+    printf("\n Message:  %s\n", getMessage());
     printf("\n Input > ");
 
     char str1[4];

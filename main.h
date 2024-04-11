@@ -9,5 +9,5 @@
 
 int doesCardExists(const char *Filename);
 void GameLoop();
-const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
+const char *Filename = "../Cards.txt";
 void setMessage(int value);
