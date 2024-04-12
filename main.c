@@ -16,7 +16,7 @@ void setMessage(int value) {
     char fail[5] = "Fail";
 
     if (value == 0) {
-        *Message = *fail;
+        //Message = "Fail";
     } else {
         *Message = *Ok;
     }

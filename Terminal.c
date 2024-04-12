@@ -21,8 +21,8 @@ int GameCommands(char input[]) {
     } else if (strcmp(input, "LD") == 0) {
         doesCardExists(Filename);
 
-    } else if (strcmp(input, "ST") == 0) {
-        exit(1);
+    } else if (strcmp(input, "QQ") == 0) {
+        exit(0);
     } else {
         printf("Invalid command\n");
 
