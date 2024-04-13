@@ -3,8 +3,9 @@
 
 #include "Terminal.c"
 
+const int sz = 3;
 
-struct nodeStack{
+struct Node{
     int value;
     char name[2];
     struct nodeStack *next;
@@ -26,10 +27,20 @@ char *getMessage(){
     return  Message;
 }
 
+void insertStart(struct Node **head, const char *name) {
+
+    struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
+
+    strcpy(newNode->name,name);
+    newNode->next = *head;
+
+    //changing the new head to this freshly entered node
+    *head = newNode;
+}
 
 // Function to free memory recursively for the linked list - ChatGPT
 // TODO Remake this
-void freeLinkedList(struct nodeStack *head) {
+/*void freeLinkedList(struct nodeStack *head) {
     if (head == NULL) // Base case: if the list is empty
         return;
 
@@ -38,30 +49,45 @@ void freeLinkedList(struct nodeStack *head) {
 
     // Free memory for the current node
     free(head);
-}
+}*/
 
+void display(struct Node *node) {
+    int count = 0; // Count to keep track of the number of elements printed in a row
 
+    while (node != NULL) {
+        printf("\t%s", node->name);
+        count++;
 
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+        if (count % 7 == 0)
+            printf("\n");
 
-int doesCardExists(const char *Filename) {
-    FILE *outStream = fopen(Filename, "r");
-
-    if (outStream != NULL) {
-        // File exists and successfully opened
-        setMessage(1); // Proper Message
-        fclose(outStream);
-        return 1; // Indicate that the file exists
-    } else {
-        // File does not exist or cannot be opened
-        perror("Error opening file"); // Print system-specific error message
-        return 0; // Indicate that the file does not exist
+        node = node->next;
     }
+    printf("\n");
 }
 
 
+int doesCardExists() {
+    struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
+    char str[sz];
+    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt";
+    FILE *outStream = fopen(fp, "r");
 
+    if (outStream == NULL) {
+        perror("Error opening file");
+        return -1; // Return an error code
+    }
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    // Read from file until EOF is reached
+    while (fscanf(outStream, "%s", str) == 1) {
+        insertStart(&head, str);
+    }
 
-
+    fclose(outStream);
+    display(head);
+    return 0; // Return success
+}
 
 
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
@@ -75,17 +101,11 @@ int doesCardExists(const char *Filename) {
 // TODO Get from linked list
 
 void GameLoop(char str2[4]) {
-    const char *Filename = "Cards.txt";
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
-
-    for(int i = 0; i < 8; i++){
-        printf("\t[]\t[]\t[]\t[]\t[]\t[]\t[]\n");
-    }
-
 
     printf("Last Command: %s",str2);
     printf("\n Message:  %s\n", getMessage());
     printf("Input > ");
+
 
     scanf("%s", str2);
     //TODO Make a try catch for length of string
@@ -99,7 +119,6 @@ void GameLoop(char str2[4]) {
 
 
 int main() {
-    const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");
@@ -107,20 +126,15 @@ int main() {
     printf("\n Input > ");
 
     char str1[4];
-
     scanf("%s", str1);
+
     //TODO Make a try catch for length of string
     GameCommands( str1);
 
     GameLoop( str1);
 
-    struct nodeStack *head = NULL;
     free(str1);
-    freeLinkedList(head); // Free memory for the entire linked list
+    //freeLinkedList(head); // Free memory for the entire linked list
 
     return 0;
 }
-
-
-
-

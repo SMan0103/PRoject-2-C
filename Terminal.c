@@ -19,7 +19,7 @@ int GameCommands(char input[]) {
         //command3Split();
 
     } else if (strcmp(input, "LD") == 0) {
-        doesCardExists(Filename);
+        doesCardExists();
 
     } else if (strcmp(input, "ST") == 0) {
         exit(1);

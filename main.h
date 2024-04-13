@@ -7,7 +7,7 @@
 
 //#endif //UNTITLED1_MAIN_H
 
-int doesCardExists(const char *Filename);
+int doesCardExists();
 void GameLoop();
 const char *Filename = "../Cards.txt";
 void setMessage(int value);
