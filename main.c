@@ -71,7 +71,7 @@ void display(struct Node *node) {
 int doesCardExists() {
     struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
     char str[sz];
-    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt";
+    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
     FILE *outStream = fopen(fp, "r");
 
     if (outStream == NULL) {
