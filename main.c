@@ -4,7 +4,7 @@
 #include "Terminal.c"
 
 const int sz = 3;
-
+struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
 struct Node{
     int value;
     char name[2];
@@ -50,8 +50,26 @@ void insertStart(struct Node **head, const char *name) {
     // Free memory for the current node
     free(head);
 }*/
+int doesCardExists() {
+    char str[sz];
+    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
+    FILE *outStream = fopen(fp, "r");
 
-void display(struct Node *node) {
+    if (outStream == NULL) {
+        perror("Error opening file");
+        return -1; // Return an error code
+    }
+    printf("OK\n");
+    // Read from file until EOF is reached
+    while (fscanf(outStream, "%s", str) == 1) {
+        insertStart(&head, str);
+    }
+    fclose(outStream);
+    return 0; // Return success
+}
+
+void display() {
+    struct Node *node = head;
     int count = 0; // Count to keep track of the number of elements printed in a row
 
     while (node != NULL) {
@@ -68,26 +86,7 @@ void display(struct Node *node) {
 }
 
 
-int doesCardExists() {
-    struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
-    char str[sz];
-    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
-    FILE *outStream = fopen(fp, "r");
 
-    if (outStream == NULL) {
-        perror("Error opening file");
-        return -1; // Return an error code
-    }
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
-    // Read from file until EOF is reached
-    while (fscanf(outStream, "%s", str) == 1) {
-        insertStart(&head, str);
-    }
-
-    fclose(outStream);
-    display(head);
-    return 0; // Return success
-}
 
 
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
