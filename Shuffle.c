@@ -22,7 +22,7 @@ void shuffleCards(Cards **head){
         count++;
         current = current -> next;
     }
-    srand((time(NULL)));
+    srand(time(NULL));
 
     for(int i=0; i < count * 2; i++){
         int index = rand() % count;
@@ -42,26 +42,25 @@ void shuffleCards(Cards **head){
         }
     }
 
-void PrintList(Cards *head) {
-    while (head != NULL) {
-        printf("%s\n", head -> name);
-        head = head -> next;
+void saveListToFile(struct Cards *head, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        return;
     }
+    while (head != NULL) {
+        fprintf(file, "%s\n", head->name);
+        head = head->next;
+    }
+
+    fclose(file);
 }
 
-void freeList(Cards *head) {
-    Cards *temp;
-    while (head != NULL) {
-        temp = head;
-        head = head->next;
-        free(temp->name);
-        free(temp);
-    }
-}
 
 int ShuffleCommand() {
 
     FILE *file = fopen("C:\\Users\\PC\\Desktop\\CLionProjects\\PRoject-2-C\\Cards.txt", "r");
+
     if (file == NULL) {
         fprintf(stderr, "Error opening file.\n");
         return 1;
@@ -81,17 +80,21 @@ int ShuffleCommand() {
     }
     fclose(file);
 
-    printf("Original list:\n");
-    PrintList(head);
-
     // Shuffle the linked list
     shuffleCards(&head);
-
-    printf("\nShuffled list:\n");
-    PrintList(head);
-
+    //Saving the shuffled cards
+    saveListToFile(head, "C:\\Users\\PC\\Desktop\\CLionProjects\\PRoject-2-C\\Cards.txt");
     // Free memory
-    freeList(head);
-
-    return 0;
+    //freeList(head);
 }
+//Memory leak problems
+
+//void freeList(Cards *head) {
+  //  Cards *temp;
+    //while (head != NULL) {
+      //  temp = head;
+        //head = head->next;
+        //free(temp->name);
+        //free(temp);
+    //}
+//}
