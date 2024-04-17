@@ -10,7 +10,32 @@ struct Node{
     char name[2];
     struct nodeStack *next;
 };
+void insertStart(struct Node **head, const char *name) {
 
+    struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
+
+    strcpy(newNode->name,name);
+    newNode->next = *head;
+
+    //changing the new head to this freshly entered node
+    *head = newNode;
+}
+struct FNode{
+    char Fname[2];
+    struct FNodeStack * next;
+};
+
+// Insert at the beginning
+void insertAtBeginning(struct FNode** head_ref, char new_Fname[2]) {
+    // Allocate memory to a node
+    struct FNode* new_node = (struct FNode*)malloc(sizeof(struct FNode));
+
+    strcpy(new_node->Fname,new_Fname);
+    new_node->next = *head_ref;
+
+    // Move head to new node
+    (*head_ref) = new_node;
+}
 char Message[7];
 void setMessage(int value) {
     char Ok[5] = "OK";
@@ -27,16 +52,6 @@ char *getMessage(){
     return  Message;
 }
 
-void insertStart(struct Node **head, const char *name) {
-
-    struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-
-    strcpy(newNode->name,name);
-    newNode->next = *head;
-
-    //changing the new head to this freshly entered node
-    *head = newNode;
-}
 
 // Function to free memory recursively for the linked list - ChatGPT
 // TODO Remake this
@@ -51,16 +66,15 @@ void insertStart(struct Node **head, const char *name) {
     free(head);
 }*/
 
-void display(struct Node *node) {
+void LoadDisplay(struct Node *node, struct FNode *fnode ) {
     int count = 0; // Count to keep track of the number of elements printed in a row
 
     while (node != NULL) {
-        printf("\t%s", node->name);
         count++;
-
+            printf("\t[]");
         // If 7 elements have been printed, start a new line - This was help from ChatGPT
         if (count % 7 == 0)
-            printf("\n");
+            printf("\t%s", fnode->Fname, "\n");
 
         node = node->next;
     }
@@ -70,6 +84,13 @@ void display(struct Node *node) {
 
 int doesCardExists() {
     struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
+    struct FNode *Fhead = NULL; // Initialize head to NULL - This was debug from ChatGPT
+
+    insertAtBeginning(&Fhead, "F1");
+    insertAtBeginning(&Fhead, "F2");
+    insertAtBeginning(&Fhead, "F3");
+    insertAtBeginning(&Fhead, "F4");
+
     char str[sz];
     const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
     FILE *outStream = fopen(fp, "r");
@@ -85,7 +106,7 @@ int doesCardExists() {
     }
 
     fclose(outStream);
-    display(head);
+    LoadDisplay(head, Fhead);
     return 0; // Return success
 }
 
@@ -119,6 +140,8 @@ void GameLoop(char str2[4]) {
 
 
 int main() {
+    struct Node* head = NULL;
+
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");
