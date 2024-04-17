@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include  "main.h"
+#include "Shuffle.h"
 
 //void command1ShowCards();
 //void command2Shuffle();
@@ -8,12 +9,12 @@
 int GameCommands(char input[]) {
 
     //printf("Enter a command (ShowCards, Shuffle, Split: ");
-    //scanf("%s", *input);
+    //stscanf("%s", *input);
     if (strcmp(input, "Sp") == 0) {
         //command1ShowCards();
 
     } else if (strcmp(input, "Sh") == 0) {
-        //command2Shuffle();
+        ShuffleCommand();
 
     } else if (strcmp(input, "St") == 0) {
         //command3Split();
