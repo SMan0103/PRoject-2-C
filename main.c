@@ -5,6 +5,7 @@
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
+
 struct Node{
     int value;
     char name[2];
@@ -64,6 +65,22 @@ char *getMessage(){
     // Free memory for the current node
     free(head);
 }*/
+
+void LoadDisplay(struct Node *node) {
+    int count = 0; // Count to keep track of the number of elements printed in a row
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    while (node != NULL) {
+        count++;
+        printf("\t[]");
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+        if (count % 7 == 0)
+            printf("\n");
+
+        node = node->next;
+    }
+    printf("\n");
+}
+
 int doesCardExists() {
     char str[sz];
     const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
@@ -79,27 +96,15 @@ int doesCardExists() {
         insertStart(&head, str);
     }
     fclose(outStream);
+    LoadDisplay(head);
     return 0; // Return success
 }
 
-void LoadDisplay(struct Node *node, struct FNode *fnode ) {
-    int count = 0; // Count to keep track of the number of elements printed in a row
 
-    while (node != NULL) {
-        count++;
-        printf("\t[]");
-        // If 7 elements have been printed, start a new line - This was help from ChatGPT
-        if (count % 7 == 0)
-            printf("\t%s", fnode->Fname, "\n");
-
-        node = node->next;
-    }
-    printf("\n");
-}
 void display() {
     struct Node *node = head;
     int count = 0; // Count to keep track of the number of elements printed in a row
-
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     while (node != NULL) {
         printf("\t%s", node->name);
         count++;
