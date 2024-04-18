@@ -4,7 +4,7 @@
 #include "Terminal.c"
 
 const int sz = 3;
-
+struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
 struct Node{
     int value;
     char name[2];
@@ -52,7 +52,6 @@ char *getMessage(){
     return  Message;
 }
 
-
 // Function to free memory recursively for the linked list - ChatGPT
 // TODO Remake this
 /*void freeLinkedList(struct nodeStack *head) {
@@ -65,32 +64,7 @@ char *getMessage(){
     // Free memory for the current node
     free(head);
 }*/
-
-void LoadDisplay(struct Node *node, struct FNode *fnode ) {
-    int count = 0; // Count to keep track of the number of elements printed in a row
-
-    while (node != NULL) {
-        count++;
-            printf("\t[]");
-        // If 7 elements have been printed, start a new line - This was help from ChatGPT
-        if (count % 7 == 0)
-            printf("\t%s", fnode->Fname, "\n");
-
-        node = node->next;
-    }
-    printf("\n");
-}
-
-
 int doesCardExists() {
-    struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
-    struct FNode *Fhead = NULL; // Initialize head to NULL - This was debug from ChatGPT
-
-    insertAtBeginning(&Fhead, "F1");
-    insertAtBeginning(&Fhead, "F2");
-    insertAtBeginning(&Fhead, "F3");
-    insertAtBeginning(&Fhead, "F4");
-
     char str[sz];
     const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
     FILE *outStream = fopen(fp, "r");
@@ -99,16 +73,48 @@ int doesCardExists() {
         perror("Error opening file");
         return -1; // Return an error code
     }
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    printf("OK\n");
     // Read from file until EOF is reached
     while (fscanf(outStream, "%s", str) == 1) {
         insertStart(&head, str);
     }
-
     fclose(outStream);
-    LoadDisplay(head, Fhead);
     return 0; // Return success
 }
+
+void LoadDisplay(struct Node *node, struct FNode *fnode ) {
+    int count = 0; // Count to keep track of the number of elements printed in a row
+
+    while (node != NULL) {
+        count++;
+        printf("\t[]");
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+        if (count % 7 == 0)
+            printf("\t%s", fnode->Fname, "\n");
+
+        node = node->next;
+    }
+    printf("\n");
+}
+void display() {
+    struct Node *node = head;
+    int count = 0; // Count to keep track of the number of elements printed in a row
+
+    while (node != NULL) {
+        printf("\t%s", node->name);
+        count++;
+
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+        if (count % 7 == 0)
+            printf("\n");
+
+        node = node->next;
+    }
+    printf("\n");
+}
+
+
+
 
 
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.

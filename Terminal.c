@@ -9,8 +9,8 @@ int GameCommands(char input[]) {
 
     //printf("Enter a command (ShowCards, Shuffle, Split: ");
     //scanf("%s", *input);
-    if (strcmp(input, "Sp") == 0) {
-        //command1ShowCards();
+    if (strcmp(input, "SW") == 0) {
+        display();
 
     } else if (strcmp(input, "Sh") == 0) {
         //command2Shuffle();
