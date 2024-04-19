@@ -5,12 +5,30 @@
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was a debug from ChatGPT
+struct F1Node *F1head = NULL;
 
 struct Node{
     int value;
     char name[2];
     struct nodeStack *next;
 };
+struct F1Node{
+    char F1name[2];
+    struct F1NodeStack * next;
+};
+struct F2Node{
+    char F2name[2];
+    struct F2NodeStack * next;
+};
+struct F3Node{
+    char F3name[2];
+    struct F3NodeStack * next;
+};
+struct F4Node{
+    char F4name[2];
+    struct F4NodeStack * next;
+};
+
 void insertStart(struct Node **head, const char *name) {
 
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
@@ -21,22 +39,16 @@ void insertStart(struct Node **head, const char *name) {
     //changing the new head to this freshly entered node
     *head = newNode;
 }
-struct F1Node{
-    char F1name[2];
-    struct FNodeStack * next;
-};
-struct F2Node{
-    char F2name[2];
-    struct FNodeStack * next;
-};
-struct F3Node{
-    char F3name[2];
-    struct FNodeStack * next;
-};
-struct F4Node{
-    char F4name[2];
-    struct FNodeStack * next;
-};
+void insertStartF1(struct F1Node **head, const char *name) {
+
+    struct F1Node *newNode = (struct F1Node *) malloc(sizeof(struct F1Node));
+
+    strcpy(newNode->F1name,name);
+    newNode->next = *head;
+
+    //changing the new head to this freshly entered node
+    *head = newNode;
+}
 
 
 char Message[7];
@@ -70,13 +82,16 @@ char *getMessage(){
 
 void LoadDisplay(struct Node *node) {
     int count = 0; // Count to keep track of the number of elements printed in a row
+    int Fcount = 1; // Counter for F1, F2, F3, F4
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     while (node != NULL) {
         count++;
         printf("\t[]");
-        // If 7 elements have been printed, start a new line - This was help from ChatGPT
-        if (count % 7 == 0)
-            printf("\n");
+
+        if (count % 7 == 0) {
+            printf("\t[] F%d\n", Fcount);
+            Fcount++;
+        }
 
         node = node->next;
     }
@@ -148,12 +163,23 @@ void GameLoop(char str2[4]) {
     GameLoop(str2);
 
 }
+void PlayLoop(char str2[4]) {
+
+    printf("Last Command: %s",str2);
+    printf("\n Message:  %s\n", getMessage());
+    printf("Input > ");
 
 
+    scanf("%s", str2);
+    //TODO Make a try catch for length of string
 
+    PlayCommands(str2);
+    GameLoop(str2);
+
+}
 
 int main() {
-    struct Node* head = NULL;
+    insertStartF1(&F1head, "F1");
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 

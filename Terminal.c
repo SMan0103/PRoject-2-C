@@ -23,11 +23,21 @@ int GameCommands(char input[]) {
 
     } else if (strcmp(input, "ST") == 0) {
         exit(1);
+    } else if (strcmp(input, "P") == 0) {
+        PlayLoop(input);
     } else {
         printf("Invalid command\n");
 
     }
     setMessage(0);
     GameLoop(input);
+    return 0;
+}
+int PlayCommands(char input[]){
+
+    if (strcmp(input, "Q") == 0) {
+        GameLoop();
+    }
+    setMessage(0);
     return 0;
 }

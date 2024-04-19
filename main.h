@@ -10,5 +10,6 @@
 int doesCardExists();
 void display();
 void GameLoop();
+void PlayLoop();
 const char *Filename = "../Cards.txt";
 void setMessage(int value);
