@@ -4,7 +4,7 @@
 #include "Terminal.c"
 
 const int sz = 3;
-struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
+struct Node *head = NULL; // Initialize head to NULL - This was a debug from ChatGPT
 
 struct Node{
     int value;
@@ -21,22 +21,24 @@ void insertStart(struct Node **head, const char *name) {
     //changing the new head to this freshly entered node
     *head = newNode;
 }
-struct FNode{
-    char Fname[2];
+struct F1Node{
+    char F1name[2];
+    struct FNodeStack * next;
+};
+struct F2Node{
+    char F2name[2];
+    struct FNodeStack * next;
+};
+struct F3Node{
+    char F3name[2];
+    struct FNodeStack * next;
+};
+struct F4Node{
+    char F4name[2];
     struct FNodeStack * next;
 };
 
-// Insert at the beginning
-void insertAtBeginning(struct FNode** head_ref, char new_Fname[2]) {
-    // Allocate memory to a node
-    struct FNode* new_node = (struct FNode*)malloc(sizeof(struct FNode));
 
-    strcpy(new_node->Fname,new_Fname);
-    new_node->next = *head_ref;
-
-    // Move head to new node
-    (*head_ref) = new_node;
-}
 char Message[7];
 void setMessage(int value) {
     char Ok[5] = "OK";
