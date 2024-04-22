@@ -2,56 +2,34 @@
 #include <stdlib.h>
 
 #include "Terminal.c"
+#include "FLinkedlists.c"
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was a debug from ChatGPT
-struct F1Node *F1head = NULL;
 
-struct Node{
+
+struct Node {
     int value;
     char name[2];
     struct nodeStack *next;
 };
-struct F1Node{
-    char F1name[2];
-    struct F1NodeStack * next;
-};
-struct F2Node{
-    char F2name[2];
-    struct F2NodeStack * next;
-};
-struct F3Node{
-    char F3name[2];
-    struct F3NodeStack * next;
-};
-struct F4Node{
-    char F4name[2];
-    struct F4NodeStack * next;
-};
+
 
 void insertStart(struct Node **head, const char *name) {
 
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
 
-    strcpy(newNode->name,name);
+    strcpy(newNode->name, name);
     newNode->next = *head;
 
     //changing the new head to this freshly entered node
     *head = newNode;
 }
-void insertStartF1(struct F1Node **head, const char *name) {
 
-    struct F1Node *newNode = (struct F1Node *) malloc(sizeof(struct F1Node));
-
-    strcpy(newNode->F1name,name);
-    newNode->next = *head;
-
-    //changing the new head to this freshly entered node
-    *head = newNode;
-}
 
 
 char Message[7];
+
 void setMessage(int value) {
     char Ok[5] = "OK";
     char fail[5] = "Fail";
@@ -63,8 +41,8 @@ void setMessage(int value) {
     }
 }
 
-char *getMessage(){
-    return  Message;
+char *getMessage() {
+    return Message;
 }
 
 // Function to free memory recursively for the linked list - ChatGPT
@@ -151,7 +129,7 @@ void display() {
 
 void GameLoop(char str2[4]) {
 
-    printf("Last Command: %s",str2);
+    printf("Last Command: %s", str2);
     printf("\n Message:  %s\n", getMessage());
     printf("Input > ");
 
@@ -163,23 +141,31 @@ void GameLoop(char str2[4]) {
     GameLoop(str2);
 
 }
+
 void PlayLoop(char str2[4]) {
 
-    printf("Last Command: %s",str2);
-    printf("\n Message:  %s\n", getMessage());
+    printf("Last Command: %s", str2);
+    printf("\n Message:  %s\n",
+
+           getMessage()
+
+    );
     printf("Input > ");
 
 
     scanf("%s", str2);
-    //TODO Make a try catch for length of string
+//TODO Make a try catch for length of string
 
     PlayCommands(str2);
-    GameLoop(str2);
+    PlayLoop(str2);
 
 }
 
 int main() {
     insertStartF1(&F1head, "F1");
+    insertStartF2(&F2head, "F2");
+    insertStartF3(&F3head, "F3");
+    insertStartF4(&F4head, "F4");
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
@@ -191,9 +177,9 @@ int main() {
     scanf("%s", str1);
 
     //TODO Make a try catch for length of string
-    GameCommands( str1);
+    GameCommands(str1);
 
-    GameLoop( str1);
+    GameLoop(str1);
 
     free(str1);
     //freeLinkedList(head); // Free memory for the entire linked list
