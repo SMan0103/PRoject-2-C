@@ -2,10 +2,15 @@
 #include <stdlib.h>
 
 #include "Terminal.c"
-#include "FLinkedlists.c"
+#include "Flinkedstacks.c"
 
 const int sz = 3;
+const char *Filename = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt";
 struct Node *head = NULL; // Initialize head to NULL - This was a debug from ChatGPT
+struct F1Node *F1head = NULL;
+struct F2Node *F2head = NULL;
+struct F3Node *F3head = NULL;
+struct F4Node *F4head = NULL;
 
 
 struct Node {
@@ -78,8 +83,7 @@ void LoadDisplay(struct Node *node) {
 
 int doesCardExists() {
     char str[sz];
-    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
-    FILE *outStream = fopen(fp, "r");
+    FILE *outStream = fopen(Filename, "r");
 
     if (outStream == NULL) {
         perror("Error opening file");

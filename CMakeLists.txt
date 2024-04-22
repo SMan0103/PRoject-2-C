@@ -6,5 +6,4 @@ set(CMAKE_C_STANDARD 11)
 add_executable(untitled1 main.c
         Terminal.h
         main.h
-        FLinkedlists.c
-        FLinkedlists.h)
+)
