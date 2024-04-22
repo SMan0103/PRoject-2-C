@@ -147,7 +147,24 @@ void GameLoop(char str2[4]) {
 }
 
 void PlayLoop(char str2[4]) {
+    struct Node *node = head;
+    int rows = 8;
+    int cols = 8;
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    // Loop for rows
+    for (int i = 0; i < rows; i++) {
 
+        for (int j = 0; j < i; j++) {
+            printf("\t  ");
+        }
+        // Loop for columns
+        for (int h = 0; h < cols - i; h++) {
+            printf("\t%s", node->name);
+            node = node->next;
+        }
+        printf("\n");
+
+    }
     printf("Last Command: %s", str2);
     printf("\n Message:  %s\n",
 
