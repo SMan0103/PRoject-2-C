@@ -150,6 +150,7 @@ void PlayLoop(char str2[4]) {
     struct Node *node = head;
     int rows = 8;
     int cols = 8;
+    int first_value_printed = 0;
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     // Loop for rows
     for (int i = 0; i < rows; i++) {
@@ -159,7 +160,13 @@ void PlayLoop(char str2[4]) {
         }
         // Loop for columns
         for (int h = 0; h < cols - i; h++) {
-            printf("\t%s", node->name);
+            if(!first_value_printed){
+                printf("\t%s", node->name);
+                first_value_printed = 1;
+            }
+            else{
+                printf("\t[]");
+            }
             node = node->next;
         }
         printf("\n");
