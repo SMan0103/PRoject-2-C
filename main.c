@@ -3,7 +3,6 @@
 
 #include "Terminal.c"
 #include "Flinkedstacks.h"
-//#include "SplitLinked.c"
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
@@ -13,13 +12,11 @@ struct Node{
     char name[2];
     struct nodeStack *next;
 };
+
 void insertStart(struct Node **head, const char *name) {
-
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-
     strcpy(newNode->name,name);
     newNode->next = *head;
-
     //changing the new head to this freshly entered node
     *head = newNode;
 }
@@ -40,19 +37,13 @@ void setMessage(int value) {
 char *getMessage(){
     return  Message;
 }
-
-// Function to free memory recursively for the linked list - ChatGPT
-// TODO Remake this
-/*void freeLinkedList(struct nodeStack *head) {
-    if (head == NULL) // Base case: if the list is empty
-        return;
-
-    // Recursively free memory for the rest of the list
-    freeLinkedList(head->next);
-
-    // Free memory for the current node
-    free(head);
-}*/
+void splitLinkedList(struct Node* original, struct Node** list){
+    while(original != NULL){
+        int index = original ->value % 7;
+        insertStart(&list[index], original ->name);
+        original = original->next;
+    }
+}
 
 void LoadDisplay(struct Node *node) {
     int count = 0; // Count to keep track of the number of elements printed in a row
@@ -87,26 +78,17 @@ int doesCardExists() {
     return 0; // Return success
 }
 
-
-void display() {
-    struct Node *node = head;
-    int count = 0; // Count to keep track of the number of elements printed in a row
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+void display(struct Node *node) {
+    int count = 0;
     while (node != NULL) {
         printf("\t%s", node->name);
         count++;
-
-        // If 7 elements have been printed, start a new line - This was help from ChatGPT
         if (count % 7 == 0)
             printf("\n");
-
         node = node->next;
     }
     printf("\n");
 }
-
-
-
 
 
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
@@ -133,7 +115,14 @@ void GameLoop(char str2[4]) {
     GameLoop(str2);
 
 }
-void PlayLoop(char str2[4]) {
+
+
+
+void PlayLoop(char str2[4], struct Node *list) {
+    for (int i = 0; i < 7; i++) {
+
+        display(&list[i]); // Display each list
+    }
 
     printf("Last Command: %s", str2);
     printf("\n Message:  %s\n",
@@ -155,7 +144,12 @@ void PlayLoop(char str2[4]) {
 
 
 int main() {
-    struct Node* head = NULL;
+
+    struct Node *list[7];
+    for(int i = 0; i > 7; i++){
+        list[i] = NULL;
+    }
+    splitLinkedList(head, list); // Split the linked list
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 

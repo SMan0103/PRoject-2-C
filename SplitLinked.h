@@ -1,8 +1,0 @@
-//
-// Created by Simon on 24-04-2024.
-//
-
-#ifndef UNTITLED1_SPLITLINKED_H
-#define UNTITLED1_SPLITLINKED_H
-
-#endif //UNTITLED1_SPLITLINKED_H
