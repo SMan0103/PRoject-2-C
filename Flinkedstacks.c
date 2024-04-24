@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "string.h"
-#include  "main.h"
 
 
 void insertStartF1(struct F1Node **F1head, const char *name) {

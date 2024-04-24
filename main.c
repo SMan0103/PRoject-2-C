@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #include "Terminal.c"
+#include "Flinkedstacks.h"
+//#include "SplitLinked.c"
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
@@ -21,22 +23,8 @@ void insertStart(struct Node **head, const char *name) {
     //changing the new head to this freshly entered node
     *head = newNode;
 }
-struct FNode{
-    char Fname[2];
-    struct FNodeStack * next;
-};
 
-// Insert at the beginning
-void insertAtBeginning(struct FNode** head_ref, char new_Fname[2]) {
-    // Allocate memory to a node
-    struct FNode* new_node = (struct FNode*)malloc(sizeof(struct FNode));
 
-    strcpy(new_node->Fname,new_Fname);
-    new_node->next = *head_ref;
-
-    // Move head to new node
-    (*head_ref) = new_node;
-}
 char Message[7];
 void setMessage(int value) {
     char Ok[5] = "OK";
@@ -146,31 +134,7 @@ void GameLoop(char str2[4]) {
 
 }
 void PlayLoop(char str2[4]) {
-    struct Node *node = head;
-    int rows = 8;
-    int cols = 8;
-    int first_value_printed = 0;
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
-    // Loop for rows
-    for (int i = 0; i < rows; i++) {
 
-        for (int j = 0; j < i; j++) {
-            printf("\t  ");
-        }
-        // Loop for columns
-        for (int h = 0; h < cols - i; h++) {
-            if(!first_value_printed){
-                printf("\t%s", node->name);
-                first_value_printed = 1;
-            }
-            else{
-                printf("\t[]");
-            }
-            node = node->next;
-        }
-        printf("\n");
-
-    }
     printf("Last Command: %s", str2);
     printf("\n Message:  %s\n",
 
