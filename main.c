@@ -6,6 +6,7 @@
 
 const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
+struct Node *lists[7];
 
 struct Node{
     int value;
@@ -37,6 +38,7 @@ void setMessage(int value) {
 char *getMessage(){
     return  Message;
 }
+//Some help from chat with debug
 void splitLinkedList(struct Node* original, struct Node** list){
     while(original != NULL){
         int index = original ->value % 7;
@@ -118,10 +120,10 @@ void GameLoop(char str2[4]) {
 
 
 
-void PlayLoop(char str2[4], struct Node *list) {
-    for (int i = 0; i < 7; i++) {
+void PlayLoop(char str2[4]) {
 
-        display(&list[i]); // Display each list
+    for(int i = 0; i < 7; i++){
+        display(lists[i]);
     }
 
     printf("Last Command: %s", str2);
@@ -145,11 +147,10 @@ void PlayLoop(char str2[4], struct Node *list) {
 
 int main() {
 
-    struct Node *list[7];
-    for(int i = 0; i > 7; i++){
-        list[i] = NULL;
+    for (int i = 0; i < 7; i++) {
+        lists[i] = NULL; // Initialize each list to NULL
     }
-    splitLinkedList(head, list); // Split the linked list
+    splitLinkedList(head, lists); // Split the linked list
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
