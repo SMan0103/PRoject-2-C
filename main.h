@@ -10,6 +10,6 @@
 int doesCardExists();
 void display();
 void GameLoop();
+const char *Filename = "../Cards.txt";
 void PlayLoop();
-extern const char *Filename;
 void setMessage(int value);
