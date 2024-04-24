@@ -83,7 +83,7 @@ void LoadDisplay(struct Node *node) {
 
 int doesCardExists() {
     char str[sz];
-    const char *fp = "C:\\Users\\Simon\\CLionProjects\\PRoject-2-C\\Cards.txt"; //Change this too you own path, until we have fixed it.
+    const char *fp = "../Cards.txt"; //Change this too you own path, until we have fixed it.
     FILE *outStream = fopen(fp, "r");
 
     if (outStream == NULL) {
