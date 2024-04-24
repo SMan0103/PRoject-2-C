@@ -3,7 +3,7 @@
 #include <SDL.h>
 
 #include "Terminal.c"
-
+//#include "Cards.c"
 
 struct nodeStack{
     int value;
@@ -78,7 +78,7 @@ int doesCardExists(const char *Filename) {
 // TODO Get from linked list
 
 void GameLoop(char str2[4]) {
-    const char *Filename = "Cards.txt";
+    const char *Filename = "../Cards.txt";
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     for(int i = 0; i < 8; i++){
@@ -99,6 +99,79 @@ void GameLoop(char str2[4]) {
 }
 
 
+// all gui propety of the cards
+struct cardPropety{
+    int x, y;
+    int w, h;
+};
+
+struct cardColorFuckDig{
+
+};
+struct card{
+    int value;
+    SDL_Rect cardPropety;
+    //SDL_Texture cardColorFuckDig;
+
+};
+void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety) {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(renderer, cardPropety);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawRect(renderer, cardPropety);
+}
+
+// SUp for the cards
+void AddCardsToGUI(SDL_Renderer* renderer){
+
+    int startY = 25;
+    int startX = 25;
+    int cardW = 50;
+    int cardH = 70;
+
+    int stopFor = 0;
+
+    int StartUpPhaseForCardPlacement[] = {1,6,7,8,9,10,11};
+
+    for (int j = 0; j < 7;  j++){
+        int xOffSet = cardW + 10;
+        for(int i = 0; i < StartUpPhaseForCardPlacement[j]; i++){
+            if (stopFor == 52){
+                continue;
+            }
+
+            // Her skal der laves så der kan komme et nyt card ud.
+
+            struct card cards;
+
+            cards.cardPropety.x = startX + j * xOffSet;
+            cards.cardPropety.y = startY + i * (cardH - 35);
+            cards.cardPropety.w = cardW;
+            cards.cardPropety.h = cardH;
+            drawCard(renderer,&cards.cardPropety);
+            stopFor += 1;
+
+        }
+
+        xOffSet += 10;
+    }
+
+    for (int i = 0; i < 4; i++){
+        struct card cards;
+
+        cards.cardPropety.x = startX + (cardW + 20) * 7;
+        cards.cardPropety.y = startY + i * (cardH + 15);
+        cards.cardPropety.w = cardW;
+        cards.cardPropety.h = cardH;
+        drawCard(renderer,&cards.cardPropety);
+    }
+
+
+}
+
+
+
+
 
 
 int main(int argc, char* argv[]) {
@@ -112,7 +185,7 @@ int main(int argc, char* argv[]) {
     window = SDL_CreateWindow("Test_1",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
-                              800, 600,
+                              800, 800,
                               SDL_WINDOW_SHOWN);
     if (window == NULL) goto CLEANUP_AND_QUIT;
 

@@ -11,3 +11,6 @@ int doesCardExists(const char *Filename);
 void GameLoop();
 const char *Filename = "../Cards.txt";
 void setMessage(int value);
+
+SDL_Window* window;
+SDL_Renderer* renderer;
