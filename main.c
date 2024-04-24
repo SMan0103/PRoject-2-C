@@ -116,6 +116,8 @@ int main(int argc, char* argv[]) {
                               SDL_WINDOW_SHOWN);
     if (window == NULL) goto CLEANUP_AND_QUIT;
 
+
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if ( renderer == NULL) goto CLEANUP_AND_QUIT;
     while(!quit) {
@@ -127,8 +129,10 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 40, 0, 0);
         SDL_RenderClear(renderer);
+
+        AddCardsToGUI(renderer);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(10);

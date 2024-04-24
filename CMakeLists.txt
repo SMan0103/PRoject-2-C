@@ -11,6 +11,7 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 add_executable(untitled1 main.c
         Terminal.h
-        main.h)
+        main.h
+        Cards.h)
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
