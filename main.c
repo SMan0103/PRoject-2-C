@@ -158,9 +158,9 @@ void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color col
                 cards.cardPropety.w = cardW;
                 cards.cardPropety.h = cardH;
 
-                int isBlue = (i >= StartUpPhaseForCardPlacement[j] - 5) ? 1 : 0;
+                int Blue = (i >= StartUpPhaseForCardPlacement[j] - 5) ? 1 : 0;
 
-                drawCard(renderer, &cards.cardPropety, (isBlue ? redColor : blueColor), 0);
+                drawCard(renderer, &cards.cardPropety, (Blue ? redColor : blueColor), 0);
                 stopFor += 1;
 
             }
