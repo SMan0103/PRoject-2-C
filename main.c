@@ -114,129 +114,136 @@ struct card{
     //SDL_Texture cardColorFuckDig;
 
 };
-void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, cardPropety);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(renderer, cardPropety);
+void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color color, int isFaceDown) {
+    if (isFaceDown) {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        SDL_RenderFillRect(renderer, cardPropety);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderDrawRect(renderer, cardPropety);
+    } else {
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderFillRect(renderer, cardPropety);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderDrawRect(renderer, cardPropety);
+    }
 }
-
 // SUp for the cards
-void AddCardsToGUI(SDL_Renderer* renderer){
+    void AddCardsToGUI(SDL_Renderer *renderer) {
 
-    int startY = 25;
-    int startX = 25;
-    int cardW = 50;
-    int cardH = 70;
+        int startY = 25;
+        int startX = 25;
+        int cardW = 50;
+        int cardH = 70;
 
-    int stopFor = 0;
+        int stopFor = 0;
 
-    int StartUpPhaseForCardPlacement[] = {1,6,7,8,9,10,11};
+        int StartUpPhaseForCardPlacement[] = {1, 6, 7, 8, 9, 10, 11};
 
-    for (int j = 0; j < 7;  j++){
-        int xOffSet = cardW + 10;
-        for(int i = 0; i < StartUpPhaseForCardPlacement[j]; i++){
-            if (stopFor == 52){
-                continue;
+        SDL_Color redColor = {255, 0, 0, 255};
+        SDL_Color blueColor = {0, 0, 255, 255};
+
+        for (int j = 0; j < 7; j++) {
+            int xOffSet = cardW + 10;
+            for (int i = 0; i < StartUpPhaseForCardPlacement[j]; i++) {
+                if (stopFor == 52) {
+                    continue;
+                }
+
+                // Her skal der laves så der kan komme et nyt card ud.
+
+                struct card cards;
+
+                cards.cardPropety.x = startX + j * xOffSet;
+                cards.cardPropety.y = startY + i * (cardH - 35);
+                cards.cardPropety.w = cardW;
+                cards.cardPropety.h = cardH;
+
+                int isBlue = (i >= StartUpPhaseForCardPlacement[j] - 5) ? 1 : 0;
+
+                drawCard(renderer, &cards.cardPropety, (isBlue ? redColor : blueColor), 0);
+                stopFor += 1;
+
             }
 
-            // Her skal der laves så der kan komme et nyt card ud.
+            xOffSet += 10;
+        }
 
+        for (int i = 0; i < 4; i++) {
             struct card cards;
 
-            cards.cardPropety.x = startX + j * xOffSet;
-            cards.cardPropety.y = startY + i * (cardH - 35);
+            cards.cardPropety.x = startX + (cardW + 20) * 7;
+            cards.cardPropety.y = startY + i * (cardH + 15);
             cards.cardPropety.w = cardW;
             cards.cardPropety.h = cardH;
-            drawCard(renderer,&cards.cardPropety);
-            stopFor += 1;
-
+            drawCard(renderer, &cards.cardPropety, redColor, 0);
         }
 
-        xOffSet += 10;
-    }
 
-    for (int i = 0; i < 4; i++){
-        struct card cards;
-
-        cards.cardPropety.x = startX + (cardW + 20) * 7;
-        cards.cardPropety.y = startY + i * (cardH + 15);
-        cards.cardPropety.w = cardW;
-        cards.cardPropety.h = cardH;
-        drawCard(renderer,&cards.cardPropety);
     }
 
 
-}
+    int main(int argc, char *argv[]) {
+
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+        int quit = 0;
+        SDL_Event event;
+
+        int result = SDL_Init(SDL_INIT_EVERYTHING);
+        window = SDL_CreateWindow("Test_1",
+                                  SDL_WINDOWPOS_CENTERED,
+                                  SDL_WINDOWPOS_CENTERED,
+                                  800, 800,
+                                  SDL_WINDOW_SHOWN);
+        if (window == NULL) goto CLEANUP_AND_QUIT;
 
 
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        if (renderer == NULL) goto CLEANUP_AND_QUIT;
+        while (!quit) {
+            while (SDL_PollEvent(&event) != 0) {
+                switch (event.type) {
+                    case SDL_QUIT:
+                        quit = 1;
 
-
-
-
-int main(int argc, char* argv[]) {
-
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    int quit = 0;
-    SDL_Event event;
-
-    int result = SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("Test_1",
-                              SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED,
-                              800, 800,
-                              SDL_WINDOW_SHOWN);
-    if (window == NULL) goto CLEANUP_AND_QUIT;
-
-
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if ( renderer == NULL) goto CLEANUP_AND_QUIT;
-    while(!quit) {
-        while (SDL_PollEvent(&event) != 0) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    quit = 1;
-
+                }
             }
+
+            SDL_SetRenderDrawColor(renderer, 0, 40, 0, 0);
+            SDL_RenderClear(renderer);
+
+            AddCardsToGUI(renderer);
+
+            SDL_RenderPresent(renderer);
+            SDL_Delay(10);
         }
+        CLEANUP_AND_QUIT:
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
 
-        SDL_SetRenderDrawColor(renderer, 0, 40, 0, 0);
-        SDL_RenderClear(renderer);
 
-        AddCardsToGUI(renderer);
+        //const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
+        printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
-        SDL_RenderPresent(renderer);
-        SDL_Delay(10);
+        printf("Last Command: \n");
+        printf("\n Message:  %s\n", getMessage());
+        printf("\n Input > ");
+
+        char str1[4];
+
+        scanf("%s", str1);
+        //TODO Make a try catch for length of string
+        GameCommands(str1);
+
+        GameLoop(str1);
+
+        struct nodeStack *head = NULL;
+        free(str1);
+        freeLinkedList(head); // Free memory for the entire linked list
+
+        return 0;
     }
-    CLEANUP_AND_QUIT:
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-
-
-    //const char *Filename = "C:\\Users\\steam\\CLionProjects\\untitled1\\Cards.txt";
-    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
-
-    printf("Last Command: \n");
-    printf("\n Message:  %s\n", getMessage());
-    printf("\n Input > ");
-
-    char str1[4];
-
-    scanf("%s", str1);
-    //TODO Make a try catch for length of string
-    GameCommands( str1);
-
-    GameLoop( str1);
-
-    struct nodeStack *head = NULL;
-    free(str1);
-    freeLinkedList(head); // Free memory for the entire linked list
-
-    return 0;
-}
 
 
 
