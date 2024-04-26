@@ -5,8 +5,6 @@
 #include "Flinkedstacks.h"
 
 const int sz = 3;
-struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
-struct Node *lists[7];
 
 struct Node {
     int value;
@@ -99,23 +97,8 @@ int doesCardExists() {
     LoadDisplay(head);
     return 0; // Return success
 }
-void SW() {
-    struct Node *node = head;
-    int count = 0; // Count to keep track of the number of elements printed in a row
 
-    while (node != NULL) {
-        printf("\t%s", node->name);
-        count++;
-
-        // If 7 elements have been printed, start a new line - This was help from ChatGPT
-        if (count % 7 == 0)
-            printf("\n");
-
-        node = node->next;
-    }
-    printf("\n");
-}
-void display(struct Node *node) {
+void Display(struct Node *node) {
     int count = 0;
     while (node != NULL) {
         printf("\t%s", node->name);
@@ -160,7 +143,7 @@ void PlayLoop(char str2[4]) {
 
     for (int i = 0; i < 7; i++) {
         printf("Part %d: ", i + 1);
-        display(parts[i]);
+        Display(parts[i]);
     }
 
     printf("Last Command: %s", str2);
