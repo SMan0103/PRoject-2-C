@@ -8,7 +8,7 @@ const int sz = 3;
 struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatGPT
 struct Node *lists[7];
 
-struct Node{
+struct Node {
     int value;
     char name[2];
     struct nodeStack *next;
@@ -16,7 +16,7 @@ struct Node{
 
 void insertStart(struct Node **head, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-    strcpy(newNode->name,name);
+    strcpy(newNode->name, name);
     newNode->next = *head;
     //changing the new head to this freshly entered node
     *head = newNode;
@@ -24,6 +24,7 @@ void insertStart(struct Node **head, const char *name) {
 
 
 char Message[7];
+
 void setMessage(int value) {
     char Ok[5] = "OK";
     char fail[5] = "Fail";
@@ -35,16 +36,35 @@ void setMessage(int value) {
     }
 }
 
-char *getMessage(){
-    return  Message;
+char *getMessage() {
+    return Message;
 }
+
 //Some help from chat with debug
-void splitLinkedList(struct Node* original, struct Node** list){
-    while(original != NULL){
-        int index = original ->value % 7;
-        insertStart(&list[index], original ->name);
-        original = original->next;
+struct Node **splitLinkedList(struct Node *head) {
+    int totalNodes = 0;
+    struct Node **parts = (struct Node **) malloc(7 * sizeof(struct Node *));
+
+    int extraNodes = totalNodes % 7;
+    int totalLinkedListArray[] = {1, 6, 7, 8, 9, 10, 11};
+
+    struct Node *current = head;
+    for (int i = 0; i < 7; i++) {
+        int nodesPerPart = totalLinkedListArray[i];
+        parts[i] = current;
+        int partSize = nodesPerPart + (extraNodes > 0 ? 1 : 0);
+        for (int j = 1; j < partSize; j++) {
+            current = current->next;
+        }
+        if (current != NULL) {
+            struct Node *temp = current->next;
+            current->next = NULL;
+            current = temp;
+        }
+        extraNodes--;
     }
+
+    return parts;
 }
 
 void LoadDisplay(struct Node *node) {
@@ -79,7 +99,22 @@ int doesCardExists() {
     LoadDisplay(head);
     return 0; // Return success
 }
+void SW() {
+    struct Node *node = head;
+    int count = 0; // Count to keep track of the number of elements printed in a row
 
+    while (node != NULL) {
+        printf("\t%s", node->name);
+        count++;
+
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+        if (count % 7 == 0)
+            printf("\n");
+
+        node = node->next;
+    }
+    printf("\n");
+}
 void display(struct Node *node) {
     int count = 0;
     while (node != NULL) {
@@ -105,7 +140,7 @@ void display(struct Node *node) {
 
 void GameLoop(char str2[4]) {
 
-    printf("Last Command: %s",str2);
+    printf("Last Command: %s", str2);
     printf("\n Message:  %s\n", getMessage());
     printf("Input > ");
 
@@ -119,11 +154,13 @@ void GameLoop(char str2[4]) {
 }
 
 
-
 void PlayLoop(char str2[4]) {
 
-    for(int i = 0; i < 7; i++){
-        display(lists[i]);
+    struct Node **parts = splitLinkedList(head);
+
+    for (int i = 0; i < 7; i++) {
+        printf("Part %d: ", i + 1);
+        display(parts[i]);
     }
 
     printf("Last Command: %s", str2);
@@ -144,13 +181,8 @@ void PlayLoop(char str2[4]) {
 }
 
 
-
 int main() {
 
-    for (int i = 0; i < 7; i++) {
-        lists[i] = NULL; // Initialize each list to NULL
-    }
-    splitLinkedList(head, lists); // Split the linked list
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
@@ -162,9 +194,9 @@ int main() {
     scanf("%s", str1);
 
     //TODO Make a try catch for length of string
-    GameCommands( str1);
+    GameCommands(str1);
 
-    GameLoop( str1);
+    GameLoop(str1);
 
     free(str1);
     //freeLinkedList(head); // Free memory for the entire linked list

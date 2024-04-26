@@ -9,7 +9,7 @@
 
 int doesCardExists();
 void GameLoop();
-void display();
+void SW();
 const char *Filename = "../Cards.txt";
 void PlayLoop();
 void setMessage(int value);
