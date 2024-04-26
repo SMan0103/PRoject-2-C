@@ -15,9 +15,18 @@ struct Node {
 void insertStart(struct Node **head, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
-    newNode->next = *head;
-    //changing the new head to this freshly entered node
-    *head = newNode;
+    newNode->next = NULL;
+
+    if(*head == NULL)
+        *head = newNode;
+    else{
+        struct Node* lastNode = *head;
+
+        while(lastNode -> next != NULL){
+            lastNode = lastNode->next;
+        }
+        lastNode->next = newNode;
+    }
 }
 
 
@@ -99,12 +108,8 @@ int doesCardExists() {
 }
 
 void Display(struct Node *node) {
-    int count = 0;
     while (node != NULL) {
         printf("\t%s", node->name);
-        count++;
-        if (count % 7 == 0)
-            printf("\n");
         node = node->next;
     }
     printf("\n");
@@ -139,10 +144,9 @@ void GameLoop(char str2[4]) {
 
 void PlayLoop(char str2[4]) {
 
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     struct Node **parts = splitLinkedList(head);
-
     for (int i = 0; i < 7; i++) {
-        printf("Part %d: ", i + 1);
         Display(parts[i]);
     }
 
