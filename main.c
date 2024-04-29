@@ -155,7 +155,6 @@ int FirstLoadFalse = 0;
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
     struct Node **parts = splitLinkedList(head);
-    struct Node *node = head;
     int countArray[7];
     if (FirstLoadFalse == 0) {
         setVisibility(parts);
@@ -203,14 +202,23 @@ void Display() {
 
 void FindAndReplace(char inputOne[5]){
     struct Node **parts = splitLinkedList(head);
+    int countArray[7];
+    for (int t = 0; t < 7; t++) {
+        struct Node *childNode = parts[t];
+        countArray[t] = LinkedlistLength(childNode);
+    }
+
     for (int j = 0; j < 7; j++){
         struct Node *childNode = parts[j];
-        while (childNode != NULL) {
-            if (strcmp(childNode->name, inputOne) == 0){
-                strcpy(childNode->name, "DM");
+        for(int i = 0; i < countArray[j]; i++){
+            if(childNode != NULL) {
+                if (strcmp(childNode->name, inputOne) == 0){
+                    strcpy(childNode->name, "DM");
+                }
+                childNode = childNode->next;
             }
-            childNode = childNode->next;
         }
+
     }
     Display();
 }
