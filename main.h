@@ -14,3 +14,4 @@ struct Node *head = NULL; // Initialize head to NULL - This was debug from ChatG
 const char *Filename = "../Cards.txt";
 void PlayLoop();
 void setMessage(int value);
+int moveCards(char input[]);

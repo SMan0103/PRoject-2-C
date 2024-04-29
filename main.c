@@ -4,7 +4,7 @@
 #include "Terminal.c"
 #include "Flinkedstacks.h"
 
-#define ROWS 7
+
 
 const int sz = 3;
 
@@ -31,12 +31,6 @@ void insertStart(struct Node **head, const char *name) {
         }
         lastNode->next = newNode;
     }
-}
-void hideCard(struct Node* node){
-    node->visible = 0;
-}
-void visibleCard(struct Node* node){
-    node->visible = 1;
 }
 
 char Message[7];
@@ -70,7 +64,12 @@ struct Node **splitLinkedList(struct Node *head) {
         parts[i] = current;
         int partSize = nodesPerPart + (extraNodes > 0 ? 1 : 0);
         for (int j = 1; j < partSize; j++) {
-            current = current->next;
+            if(current != NULL){
+                current = current->next;
+            } else{
+                continue;
+            }
+
         }
         if (current != NULL) {
             struct Node *temp = current->next;
@@ -148,13 +147,15 @@ void setVisibility(struct Node **parts){
 }
 
 
+
 int FirstLoadFalse = 0;
+
 
 //Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
-    struct Node *node = head;
     struct Node **parts = splitLinkedList(head);
+    struct Node *node = head;
     int countArray[7];
     if (FirstLoadFalse == 0) {
         setVisibility(parts);
@@ -200,15 +201,49 @@ void Display() {
     }
 }
 
-// TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
+void FindAndReplace(char inputOne[5]){
+    struct Node **parts = splitLinkedList(head);
+    for (int j = 0; j < 7; j++){
+        struct Node *childNode = parts[j];
+        while (childNode != NULL) {
+            if (strcmp(childNode->name, inputOne) == 0){
+                strcpy(childNode->name, "DM");
+            }
+            childNode = childNode->next;
+        }
+    }
+    Display();
+}
+
+int moveCards(char input[]){
+    // Ensure the input is at least 6 characters long
+    if (strlen(input) < 6) {
+        printf("Invalid input format.\n");
+        return 0;
+    }
+
+    // Extract the first and second cards from the input string
+    char firstCard[3] = {input[0], input[1], '\0'};
+    char secCard[3] = {input[3], input[4], '\0'};
+
+    // Call FindAndReplace with the first card
+    FindAndReplace(firstCard);
+
+    // Optionally, you can call FindAndReplace with the second card as well
+    // FindAndReplace(secCard);
+
+    return 0;
+}
 
 
-// TODO Cards
-// TODO Shuffle card
+
+
+
+
 // TODO Split
 // TODO Did read Command
-// TODO Store last command
-// TODO Get from linked list
+
+
 
 void GameLoop(char str2[4]) {
 
@@ -253,8 +288,6 @@ void PlayLoop(char str2[4]) {
 
 
 int main() {
-
-
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
 
     printf("Last Command: \n");

@@ -34,9 +34,9 @@ int GameCommands(char input[]) {
     } else if (strcmp(input, "P") == 0) {
         PlayLoop(input);
     } else {
-        printf("Invalid command\n");
-
+        printf("Invalid Command");
     }
+
     setMessage(0);
     GameLoop(input);
     return 0;
@@ -45,6 +45,9 @@ int PlayCommands(char input[]){
 
     if (strcmp(input, "Q") == 0) {
         GameLoop();
+    }else {
+        moveCards(input);
+
     }
     setMessage(0);
     return 0;
