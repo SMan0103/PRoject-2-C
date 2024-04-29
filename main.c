@@ -133,12 +133,33 @@ void PrintSpaces(int count) {
         printf("\t");
     }
 }
-//Some help from ChatGPT with the use of PrintSpaces and Calculate the MaxHeight
+
+void setVisibility(struct Node **parts){
+    for(int i = 0; i < 7; i++){
+        struct Node *childNode = parts[i];
+        int count = LinkedlistLength(childNode);
+        for(int j = 1; j <= count - 5; j++) {
+            if (childNode != NULL) {
+                childNode->visible = 0;
+                childNode = childNode->next;
+            }
+        }
+    }
+}
+
+
+int FirstLoadFalse = 0;
+
+//Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
     struct Node *node = head;
     struct Node **parts = splitLinkedList(head);
     int countArray[7];
+    if (FirstLoadFalse == 0) {
+        setVisibility(parts);
+        FirstLoadFalse = 1;
+    }
 
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
@@ -166,7 +187,11 @@ void Display() {
                 for (int k = 0; k < h; k++) {
                     childNode = childNode->next;
                 }
-                printf("\t %s", childNode->name);
+                if (childNode -> visible == 1){
+                    printf("\t %s", childNode->name);
+                } else{
+                    printf("\t []");
+                }
             } else {
                 PrintSpaces(1); // Print empty space
             }
