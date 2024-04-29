@@ -5,11 +5,15 @@
 //void command1ShowCards();
 //void command2Shuffle();
 //void command3Split();
+int LDfalse = 0;
 int GameCommands(char input[]) {
     //printf("Enter a command (ShowCards, Shuffle, Split: ");
     //scanf("%s", *input);
+
+
+
     if (strcmp(input, "SW") == 0) {
-        Display(head);
+        Display();
 
     } else if (strcmp(input, "Sh") == 0) {
         //command2Shuffle();
@@ -18,7 +22,12 @@ int GameCommands(char input[]) {
         //command3Split();
 
     } else if (strcmp(input, "LD") == 0) {
-        doesCardExists();
+        if(LDfalse == 0 ){
+            LDfalse = 1;
+            doesCardExists();
+        } else {
+            printf("Cammand alrig in place");
+        }
 
     } else if (strcmp(input, "ST") == 0) {
         exit(1);

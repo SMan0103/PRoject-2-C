@@ -107,7 +107,6 @@ int doesCardExists() {
         return -1; // Return an error code
     }
     printf("OK\n");
-    // Read from file until EOF is reached
     while (fscanf(outStream, "%s", str) == 1) {
         insertStart(&head, str);
     }
@@ -116,14 +115,65 @@ int doesCardExists() {
     return 0; // Return success
 }
 
-void Display(struct Node *node) {
-    while (node != NULL) {
-        printf("\t%s", node->name);
+// This function take a linked list a return its length.
+int LinkedlistLength(struct Node *node) {
+    int count;
+    int tempCount = 0;
+    while (node != NULL){
+        tempCount += 1;
         node = node->next;
     }
-    //printf("\n");
+    return tempCount;
 }
 
+// Assuming the Node structure and other necessary structures and functions are defined elsewhere - ChatGPT
+
+void PrintSpaces(int count) {
+    for (int i = 0; i < count; i++) {
+        printf("\t");
+    }
+}
+//Some help from ChatGPT with the use of PrintSpaces and Calculate the MaxHeight
+//The other section code is selfmade, that was used to promt ChatGPT
+void Display() {
+    struct Node *node = head;
+    struct Node **parts = splitLinkedList(head);
+    int countArray[7];
+
+    // Calculate lengths of sublists
+    for (int t = 0; t < 7; t++) {
+        struct Node *childNode = parts[t];
+        countArray[t] = LinkedlistLength(childNode);
+    }
+
+    // Find max height for loop
+    int maxHeight = 0;
+    for (int t = 0; t < 7; t++) {
+        if (countArray[t] > maxHeight) {
+            maxHeight = countArray[t];
+        }
+    }
+
+    // Print the cards
+    for (int h = 0; h < maxHeight; h++) {
+        for (int t = 0; t < 7; t++) {
+            struct Node *childNode = parts[t];
+            int height = countArray[t];
+
+            // If the current height is less than the number of nodes in the column
+            if (h < height) {
+                // Move to the card we want to print
+                for (int k = 0; k < h; k++) {
+                    childNode = childNode->next;
+                }
+                printf("\t %s", childNode->name);
+            } else {
+                PrintSpaces(1); // Print empty space
+            }
+        }
+        printf("\n");
+    }
+}
 
 // TODO If <Cards.txt>  is not provided: A new, shuffled deck is loaded by default, starting with all Clubs from A to K, followed by Diamonds, Hearts, and Spades in that order. In this case, the command simply returns OK.
 
@@ -154,15 +204,10 @@ void GameLoop(char str2[4]) {
 void PlayLoop(char str2[4]) {
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
-    struct Node **parts = splitLinkedList(head);
-    for (int i = 0; i < 7; i++) {
-        for(int j = 0; j < 11; j++){
-            //There need to be made a if statement here!
-            struct Node* childNode = parts[i];
-            Display(&childNode[j]);
-        }
+    Display();
 
-    }
+
+
 
     printf("Last Command: %s", str2);
     printf("\n Message:  %s\n",
