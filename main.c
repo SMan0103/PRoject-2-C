@@ -4,17 +4,21 @@
 #include "Terminal.c"
 #include "Flinkedstacks.h"
 
+#define ROWS 7
+
 const int sz = 3;
 
 struct Node {
     int value;
     char name[2];
+    int visible;
     struct nodeStack *next;
 };
 
 void insertStart(struct Node **head, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
+    newNode->visible = 1;
     newNode->next = NULL;
 
     if(*head == NULL)
@@ -28,7 +32,12 @@ void insertStart(struct Node **head, const char *name) {
         lastNode->next = newNode;
     }
 }
-
+void hideCard(struct Node* node){
+    node->visible = 0;
+}
+void visibleCard(struct Node* node){
+    node->visible = 1;
+}
 
 char Message[7];
 
@@ -112,7 +121,7 @@ void Display(struct Node *node) {
         printf("\t%s", node->name);
         node = node->next;
     }
-    printf("\n");
+    //printf("\n");
 }
 
 
@@ -147,7 +156,12 @@ void PlayLoop(char str2[4]) {
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     struct Node **parts = splitLinkedList(head);
     for (int i = 0; i < 7; i++) {
-        Display(parts[i]);
+        for(int j = 0; j < 11; j++){
+            //There need to be made a if statement here!
+            struct Node* childNode = parts[i];
+            Display(&childNode[j]);
+        }
+
     }
 
     printf("Last Command: %s", str2);
