@@ -54,6 +54,8 @@ char *getMessage() {
 int totalLinkedListArray[7];
 int firstTimeRun = 0;
 //Some help from chat with debug
+
+
 struct Node** splitLinkedList() {
     if (firstTimeRun == 0){
         int firstpartListLenth[] = {1, 6, 7, 8, 9, 10, 11};
@@ -178,7 +180,7 @@ void Display() {
             maxHeight = totalLinkedListArray[t];
         }
     }
-    struct Node* nextCard = deck;
+
     // Print the cards
     for (int h = 0; h < maxHeight; h++) {
         for (int t = 0; t < 7; t++) {
@@ -202,20 +204,68 @@ void Display() {
         printf("\n");
     }
 }
+void DeleteCard(int position){
+    Node* temp;
+    Node* prev;
+    temp = deck;
+    prev = deck;
+    for (int i = 0; i < position; i++) {
+        if (i == 0 && position == 1) {
+            *deck = (*deck)->next;
+            free(temp);
+        }
+        else {
+            if (i == position - 1 && temp) {
+                prev->next = temp->next;
+                free(temp);
+            }
+            else {
+                prev = temp;
 
+                // Position was greater than
+                // number of nodes in the list
+                if (prev == NULL)
+                    break;
+                temp = temp->next;
+            }
+        }
+    }
+
+}
 void FindAndReplace(char inputOne[5], char inputSec[5]){
     for(int i = 0; i < 7; i++){
         struct Node* current = columns[i];
         int count = LinkedListLength(columns[i]);
         for(int j = 0; j < count; j++) {
             if (current != NULL) {
-                if (strcmp(current->name, inputOne) == 0) {
-                    strcpy(current->name, inputSec);
+                if (strcmp(current->name, inputSec) == 0) {
+                    int hej = 0;
+                    while (hej == 0){
+                        for(int g = 0; g < 7; g++){
+                            struct Node* current2 = columns[g];
+                            int count = LinkedListLength(columns[g]);
+                            for(int Banna= 0; Banna < count; Banna++) {
+                                if (current2 != NULL) {
+                                    if (strcmp(current2->name, inputOne) == 0) {
+                                        DeleteCard(i,j,g,Banna);
+                                        return;
+
+                                        hej = 1;
+                                    } else{
+                                        current2 = current2->next;
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                } else{
+                    current = current->next;
                 }
-                current = current->next;
             }
         }
     }
+
 }
 
 int moveCards(char input[]){
@@ -236,7 +286,7 @@ int moveCards(char input[]){
 
     // Call FindAndReplace with the first card
     FindAndReplace(firstCard, secCard);
-    
+
     return 0;
 }
 
