@@ -9,7 +9,6 @@
 const int sz = 3;
 
 typedef struct Node {
-    int value;
     char name[2];
     int visible;
     struct Node* next;
@@ -55,9 +54,7 @@ char *getMessage() {
 int totalLinkedListArray[7];
 int firstTimeRun = 0;
 //Some help from chat with debug
-struct Node **splitLinkedList() {
-    int totalNodes = 0;
-
+struct Node** splitLinkedList() {
     if (firstTimeRun == 0){
         int firstpartListLenth[] = {1, 6, 7, 8, 9, 10, 11};
         for(int i = 0; i < 7; i++){
@@ -65,23 +62,28 @@ struct Node **splitLinkedList() {
         }
         firstTimeRun += 1;
     }
-    // Help from Lucas
+
     struct Node* nextCard = deck;
     struct Node* currentColumn = NULL;
-    while (nextCard != NULL) {
-        for (int i = 0; i < sizeof(totalLinkedListArray); i++) {
-            currentColumn = columns[i];
-            for (int j = 0; j < totalLinkedListArray[i]; j++) {
-                if (currentColumn == NULL){
-                    currentColumn = nextCard;
-                } else {
-                    currentColumn -> next = nextCard;
-                    currentColumn = currentColumn->next;
-                }
-                nextCard = nextCard -> next;
+
+    for (int i = 0; i < 7; i++) {
+        currentColumn = NULL;
+        for (int j = 0; j < totalLinkedListArray[i]; j++) {
+            if (currentColumn == NULL) {
+                columns[i] = nextCard;
+                currentColumn = nextCard;
+            } else {
+                currentColumn->next = nextCard;
+                currentColumn = currentColumn->next;
             }
+            nextCard = nextCard->next;
+        }
+        if (currentColumn != NULL) {
+            currentColumn->next = NULL; // Disconnect the current segment from the rest
         }
     }
+
+    return columns;
 }
 
 void LoadDisplay(struct Node *node) {
@@ -116,16 +118,19 @@ int doesCardExists() {
     return 0; // Return success
 }
 
+
+
 // This function take a linked list a return its length.
-int LinkedlistLength(struct Node *node) {
-    int count;
-    int tempCount = 0;
-    while (node != NULL){
-        tempCount += 1;
-        node = node->next;
+int LinkedListLength(struct Node* head) {
+    int count = 0;
+    struct Node* current = head;
+    while (current != NULL) {
+        count++;
+        current = current->next;
     }
-    return tempCount;
+    return count;
 }
+
 
 // Assuming the Node structure and other necessary structures and functions are defined elsewhere - ChatGPT
 
@@ -136,15 +141,16 @@ void PrintSpaces(int count) {
 }
 
 void setVisibility(){
-    struct Node* nextCard = deck;
     for(int i = 0; i < 7; i++){
-        int count = LinkedlistLength(columns[i]);
+        struct Node* current = columns[i];
+        int count = LinkedListLength(columns[i]);
         for(int j = 1; j <= count - 5; j++) {
-            if (nextCard != NULL) {
-                nextCard->visible = 0;
-                nextCard = nextCard->next;
+            if (current != NULL) {
+                current->visible = 0;
+                current = current->next;
             }
         }
+
     }
 }
 
@@ -155,20 +161,18 @@ int maxHeight = 0;
 //Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
-    if (FirstLoadFalse == 0) {
 
+    if (FirstLoadFalse == 0) {
+        splitLinkedList();
         setVisibility();
         FirstLoadFalse = 1;
     }
-
-
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
-        totalLinkedListArray[t] = LinkedlistLength(columns);
+        totalLinkedListArray[t] = LinkedListLength(columns[t]);
     }
 
     // Find max height for loop
-
     for (int t = 0; t < 7; t++) {
         if (totalLinkedListArray[t] > maxHeight) {
             maxHeight = totalLinkedListArray[t];
@@ -178,18 +182,17 @@ void Display() {
     // Print the cards
     for (int h = 0; h < maxHeight; h++) {
         for (int t = 0; t < 7; t++) {
-            columns[t];
             int height = totalLinkedListArray[t];
             // If the current height is less than the number of nodes in the column
             if (h < height) {
                 // Move to the card we want to print
-
+                struct Node* current = columns[t];
                 for (int k = 0; k < h; k++) {
-                    nextCard = nextCard->next;
+                    current = current->next;
                 }
-                if (nextCard -> visible == 1){
-                    printf("\t %s", nextCard->name);
-                } else{
+                if (current->visible == 1) {
+                    printf("\t %s", current->name);
+                } else {
                     printf("\t []");
                 }
             } else {
@@ -200,22 +203,18 @@ void Display() {
     }
 }
 
-
-
-
-
-void FindAndReplace(char inputOne[5]){
-    struct Node **parts = splitLinkedList(deck);
-
-    for (int j = 0; j < 7; j++) {
-        struct Node *childNode = parts[j];
-        while (childNode != NULL) {
-            if (strcmp(childNode->name, inputOne) == 0) {
-                strcpy(childNode->name, "DM");
+void FindAndReplace(char inputOne[5], char inputSec[5]){
+    for(int i = 0; i < 7; i++){
+        struct Node* current = columns[i];
+        int count = LinkedListLength(columns[i]);
+        for(int j = 0; j < count; j++) {
+            if (current != NULL) {
+                if (strcmp(current->name, inputOne) == 0) {
+                    strcpy(current->name, inputSec);
+                }
+                current = current->next;
             }
-            childNode = childNode->next;
         }
-        //totalLinkedListArray[i] = LinkedlistLength(childNode); // update with the new length
     }
 }
 
@@ -233,14 +232,11 @@ int moveCards(char input[]){
 
     // Extract the first and second cards from the input string
     char firstCard[3] = {input[0], input[1], '\0'};
-    char secCard[3] = {input[3], input[4], '\0'};
+    char secCard[3] = {input[4], input[5], '\0'};
 
     // Call FindAndReplace with the first card
-    FindAndReplace(firstCard);
-
-    // Optionally, you can call FindAndReplace with the second card as well
-    // FindAndReplace(secCard);
-
+    FindAndReplace(firstCard, secCard);
+    
     return 0;
 }
 
