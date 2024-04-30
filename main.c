@@ -236,7 +236,7 @@ int moveCards(char input[]){
 
     // Call FindAndReplace with the first card
     FindAndReplace(firstCard, secCard);
-    
+
     return 0;
 }
 

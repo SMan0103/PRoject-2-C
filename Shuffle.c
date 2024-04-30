@@ -39,8 +39,8 @@ void shuffleCards(Cards **head){
         char *temp = node -> name;
         node -> name = node1 -> name;
         node1 -> name = temp;
-        }
     }
+}
 
 void saveListToFile(struct Cards *head, const char *filename) {
     FILE *file = fopen(filename, "w");
@@ -90,11 +90,11 @@ int ShuffleCommand() {
 //Memory leak problems
 
 //void freeList(Cards *head) {
-  //  Cards *temp;
-    //while (head != NULL) {
-      //  temp = head;
-        //head = head->next;
-        //free(temp->name);
-        //free(temp);
-    //}
+//  Cards *temp;
+//while (head != NULL) {
+//  temp = head;
+//head = head->next;
+//free(temp->name);
+//free(temp);
+//}
 //}

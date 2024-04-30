@@ -9,18 +9,12 @@
 int LDfalse = 0;
 int GameCommands(char input[]) {
     //printf("Enter a command (ShowCards, Shuffle, Split: ");
-<<<<<<< HEAD
-    //stscanf("%s", *input);
-    if (strcmp(input, "Sp") == 0) {
-        //command1ShowCards();
-=======
     //scanf("%s", *input);
 
 
 
     if (strcmp(input, "SW") == 0) {
         Display();
->>>>>>> 8f9a0b510b70d9d666a2c623083eae03c0a98e48
 
     } else if (strcmp(input, "Sh") == 0) {
         ShuffleCommand();

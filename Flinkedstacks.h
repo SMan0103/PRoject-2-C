@@ -23,5 +23,3 @@ void insertStartF1(struct F1Node **head, const char *name);
 void insertStartF2(struct F2Node **head, const char *name);
 void insertStartF3(struct F3Node **head, const char *name);
 void insertStartF4(struct F4Node **head, const char *name);
-
-
