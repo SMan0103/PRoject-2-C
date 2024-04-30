@@ -245,6 +245,9 @@ void Display() {
 //Debug help from ChatGPT
 void FindCardAndMove(char inputOne[3], char inputSec[3]) {
 
+    
+
+
     struct Node* destination;
     for(int i = 0; i < 7; i++) {
         struct Node* current = columns[i];
@@ -253,6 +256,11 @@ void FindCardAndMove(char inputOne[3], char inputSec[3]) {
         while (current != NULL) {
             if (strcmp(current->name, inputSec) == 0) {
                 // Card to move is found in current column
+                if(current->visible == 0) {
+                    return;
+                } else if(current->next != NULL){
+                    return;
+                }
                 destination = current;
             }
             current = current->next;
@@ -269,10 +277,15 @@ void FindCardAndMove(char inputOne[3], char inputSec[3]) {
             if (strcmp(current->name, inputOne) == 0) {
                 // Card to move is found in current column
                 struct Node* cardToMove = current;
-
+                if(current->visible == 0) {
+                    return;
+                }
                 // Remove cardToMove from its current position
                 if (previous == NULL) {
                     columns[i] = current->next;
+                } else if (previous->visible == 0){
+                    previous->visible = 1;
+                    previous->next = NULL;
                 } else {
                     previous->next = NULL;
                 }
@@ -293,7 +306,18 @@ void FindCardAndMove(char inputOne[3], char inputSec[3]) {
 
 int moveCards(char input[]){
     // Ensure the input is at least 6 characters long
-    if (input[2] != '-' && input[2] != '>'){
+    int whereIsWaldow = 0;
+    int countChar = 0;
+    for(int i = 0; input[i] != 0; i++){
+        if(input[i] == '-'){
+            whereIsWaldow = i;
+        }
+            countChar = i+1;
+    }
+    if (whereIsWaldow == 0){
+        return 0;
+    }
+    if (input[whereIsWaldow] != '-' && input[whereIsWaldow+1] != '>'){
         setMessage(0);
         return 0;
     }
@@ -304,9 +328,30 @@ int moveCards(char input[]){
         return 0;
     }
 
+    if (whereIsWaldow == 2 && countChar == 6) {
+        char firstCard[3] = {input[0], input[1], '\0'};
+        char secCard[3] = {input[4], input[5], '\0'};
+        FindCardAndMove(firstCard, secCard);
+    } else if (whereIsWaldow == 3 && countChar == 7){
+        char firstCard[3] = {input[0], input[1], input[2]};
+        char secCard[3] = {input[5], input[6], '\0'};
+        FindCardAndMove(firstCard, secCard);
+    } else if (whereIsWaldow == 2 && countChar == 7){
+        char firstCard[3] = {input[0], input[1], '\0'};
+        char secCard[3] = {input[5], input[6], input[7]};
+        FindCardAndMove(firstCard, secCard);
+    } else if (whereIsWaldow == 3 && countChar == 8){
+        char firstCard[3] = {input[0], input[1], input[2]};
+        char secCard[3] = {input[5], input[6], input[7]};
+        FindCardAndMove(firstCard, secCard);
+    } else{
+        return 0;
+    }
+
+
     // Extract the first and second cards from the input string
-    char firstCard[3] = {input[0], input[1], '\0'};
-    char secCard[3] = {input[4], input[5], '\0'};
+
+
 
 
     // Call FindCardAndMove with the first card and the destination column
