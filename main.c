@@ -105,15 +105,17 @@ struct cardPropety{
     int w, h;
 };
 
-struct cardColorFuckDig{
 
-};
 struct card{
     int value;
     SDL_Rect cardPropety;
     //SDL_Texture cardColorFuckDig;
 
 };
+
+
+
+
 void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color color, int isFaceDown) {
     if (isFaceDown) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
