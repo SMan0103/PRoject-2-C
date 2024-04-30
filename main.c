@@ -196,9 +196,9 @@ void Display() {
                     current = current->next;
                 }
                 if (current->visible == 1) {
-                    printf("\t %s", current->name);
+                    printf("\t%s", current->name);
                 } else {
-                    printf("\t []");
+                    printf("\t[]");
                 }
             } else {
                 PrintSpaces(1); // Print empty space
