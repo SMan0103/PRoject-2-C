@@ -196,9 +196,9 @@ void Display() {
                     current = current->next;
                 }
                 if (current->visible == 1) {
-                    printf("\t%s", current->name);
+                    printf("\t %s", current->name);
                 } else {
-                    printf("\t[]");
+                    printf("\t []");
                 }
             } else {
                 PrintSpaces(1); // Print empty space
@@ -321,7 +321,6 @@ int moveCards(char input[]){
         setMessage(0);
         return 0;
     }
-
     if (strlen(input) < 6) {
         printf("Invalid input format.\n");
         setMessage(0);
@@ -355,7 +354,7 @@ int moveCards(char input[]){
 
 
     // Call FindCardAndMove with the first card and the destination column
-    FindCardAndMove(firstCard, secCard);
+
     setMessage(1);
     return 0;
 }
