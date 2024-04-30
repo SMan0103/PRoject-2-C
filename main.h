@@ -7,7 +7,7 @@
 
 //#endif //UNTITLED1_MAIN_H
 
-int doesCardExists();
+int doesCardExists(char inputFileName[50]);
 void GameLoop();
 void Display();
 struct Node *deck = NULL; // Initialize head to NULL - This was debug from ChatGPT

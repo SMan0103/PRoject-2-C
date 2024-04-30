@@ -24,7 +24,9 @@ int GameCommands(char input[]) {
     } else if (strcmp(input, "LD") == 0) {
         if(LDfalse == 0 ){
             LDfalse = 1;
-            doesCardExists();
+            char inputFileName[50] = "../Cards.txt";
+
+            doesCardExists(inputFileName);
         } else {
             printf("Cammand alrig in place");
         }
@@ -35,6 +37,7 @@ int GameCommands(char input[]) {
         PlayLoop(input);
     } else {
         printf("Invalid Command");
+        setMessage(0);
     }
 
     setMessage(0);
@@ -47,7 +50,6 @@ int PlayCommands(char input[]){
         GameLoop();
     }else {
         moveCards(input);
-
     }
     setMessage(0);
     return 0;

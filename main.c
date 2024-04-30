@@ -42,9 +42,9 @@ void setMessage(int value) {
     char fail[5] = "Fail";
 
     if (value == 0) {
-        *Message = *fail;
+        strcpy(Message, Ok);
     } else {
-        *Message = *Ok;
+        strcpy(Message, fail);
     }
 }
 
@@ -103,7 +103,10 @@ void LoadDisplay(struct Node *node) {
     printf("\n");
 }
 
-int doesCardExists() {
+int doesCardExists(char inputFileName[50]) {
+
+    //strcmp(*Filename, inputFileName)
+
     char str[sz];
     FILE *outStream = fopen(Filename, "r");
 
@@ -204,79 +207,100 @@ void Display() {
         printf("\n");
     }
 }
-void DeleteCard(int position){
-    Node* temp;
-    Node* prev;
-    temp = deck;
-    prev = deck;
-    for (int i = 0; i < position; i++) {
-        if (i == 0 && position == 1) {
-            *deck = (*deck)->next;
-            free(temp);
-        }
-        else {
-            if (i == position - 1 && temp) {
-                prev->next = temp->next;
-                free(temp);
-            }
-            else {
-                prev = temp;
-
-                // Position was greater than
-                // number of nodes in the list
-                if (prev == NULL)
-                    break;
-                temp = temp->next;
-            }
-        }
+/*void DeleteCard(Node* toDelete) {
+    // Check if the linked list is empty
+    if (deck == NULL) {
+        printf("Linked list is empty.\n");
+        return;
     }
 
-}
-void FindAndReplace(char inputOne[5], char inputSec[5]){
-    for(int i = 0; i < 7; i++){
+    Node *temp = deck;
+    Node *prev = NULL;
+
+    // Find the node to delete in the linked list
+    while (temp != NULL && temp != toDelete) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // If the node is not found
+    if (temp == NULL) {
+        printf("Card not found.\n");
+        return;
+    }
+
+    // If node to be deleted is the first node
+    if (prev == NULL) {
+        deck = temp->next;
+    } else {
+        // Unlink the node from linked list
+        prev->next = temp->next;
+    }
+
+    // Free the memory
+    free(temp);
+    // Set toDelete pointer to NULL to avoid dangling pointer
+    toDelete = NULL;
+}*/
+//Debug help from ChatGPT
+void FindCardAndMove(char inputOne[3], char inputSec[3]) {
+
+    struct Node* destination;
+    for(int i = 0; i < 7; i++) {
         struct Node* current = columns[i];
-        int count = LinkedListLength(columns[i]);
-        for(int j = 0; j < count; j++) {
-            if (current != NULL) {
-                if (strcmp(current->name, inputSec) == 0) {
-                    int hej = 0;
-                    while (hej == 0){
-                        for(int g = 0; g < 7; g++){
-                            struct Node* current2 = columns[g];
-                            int count = LinkedListLength(columns[g]);
-                            for(int Banna= 0; Banna < count; Banna++) {
-                                if (current2 != NULL) {
-                                    if (strcmp(current2->name, inputOne) == 0) {
-                                        DeleteCard(i,j,g,Banna);
-                                        return;
+        struct Node* previous = NULL;
 
-                                        hej = 1;
-                                    } else{
-                                        current2 = current2->next;
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                } else{
-                    current = current->next;
-                }
+        while (current != NULL) {
+            if (strcmp(current->name, inputSec) == 0) {
+                // Card to move is found in current column
+                destination = current;
             }
+            current = current->next;
         }
     }
 
+
+
+    for(int i = 0; i < 7; i++) {
+        struct Node* current = columns[i];
+        struct Node* previous = NULL;
+
+        while (current != NULL) {
+            if (strcmp(current->name, inputOne) == 0) {
+                // Card to move is found in current column
+                struct Node* cardToMove = current;
+
+                // Remove cardToMove from its current position
+                if (previous == NULL) {
+                    columns[i] = current->next;
+                } else {
+                    previous->next = NULL;
+                }
+
+                // Add cardToMove to the destination linked list
+                destination->next = cardToMove;
+
+
+
+                return;
+            }
+            previous = current;
+            current = current->next;
+        }
+    }
+    printf("Card not found.\n");
 }
 
 int moveCards(char input[]){
     // Ensure the input is at least 6 characters long
     if (input[2] != '-' && input[2] != '>'){
+        setMessage(0);
         return 0;
     }
 
-
     if (strlen(input) < 6) {
         printf("Invalid input format.\n");
+        setMessage(0);
         return 0;
     }
 
@@ -284,11 +308,13 @@ int moveCards(char input[]){
     char firstCard[3] = {input[0], input[1], '\0'};
     char secCard[3] = {input[4], input[5], '\0'};
 
-    // Call FindAndReplace with the first card
-    FindAndReplace(firstCard, secCard);
 
+    // Call FindCardAndMove with the first card and the destination column
+    FindCardAndMove(firstCard, secCard);
+    setMessage(1);
     return 0;
 }
+
 
 
 
