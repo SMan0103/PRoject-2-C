@@ -8,23 +8,26 @@
 
 const int sz = 3;
 
-struct Node {
+typedef struct Node {
     int value;
     char name[2];
     int visible;
-    struct nodeStack *next;
-};
+    struct Node* next;
+} Node;
 
-void insertStart(struct Node **head, const char *name) {
+
+struct Node* columns[7];
+
+void insertStart(struct Node **deck, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
     newNode->visible = 1;
     newNode->next = NULL;
 
-    if(*head == NULL)
-        *head = newNode;
+    if(*deck == NULL)
+        *deck = newNode;
     else{
-        struct Node* lastNode = *head;
+        struct Node* lastNode = *deck;
 
         while(lastNode -> next != NULL){
             lastNode = lastNode->next;
@@ -49,37 +52,36 @@ void setMessage(int value) {
 char *getMessage() {
     return Message;
 }
-
+int totalLinkedListArray[7];
+int firstTimeRun = 0;
 //Some help from chat with debug
-struct Node **splitLinkedList(struct Node *head) {
+struct Node **splitLinkedList() {
     int totalNodes = 0;
-    struct Node **parts = (struct Node **) malloc(7 * sizeof(struct Node *));
 
-    int extraNodes = totalNodes % 7;
-    int totalLinkedListArray[] = {1, 6, 7, 8, 9, 10, 11};
-
-    struct Node *current = head;
-    for (int i = 0; i < 7; i++) {
-        int nodesPerPart = totalLinkedListArray[i];
-        parts[i] = current;
-        int partSize = nodesPerPart + (extraNodes > 0 ? 1 : 0);
-        for (int j = 1; j < partSize; j++) {
-            if(current != NULL){
-                current = current->next;
-            } else{
-                continue;
-            }
-
+    if (firstTimeRun == 0){
+        int firstpartListLenth[] = {1, 6, 7, 8, 9, 10, 11};
+        for(int i = 0; i < 7; i++){
+            totalLinkedListArray[i] = firstpartListLenth[i];
         }
-        if (current != NULL) {
-            struct Node *temp = current->next;
-            current->next = NULL;
-            current = temp;
-        }
-        extraNodes--;
+        firstTimeRun += 1;
     }
-
-    return parts;
+    // Help from Lucas
+    struct Node* nextCard = deck;
+    struct Node* currentColumn = NULL;
+    while (nextCard != NULL) {
+        for (int i = 0; i < sizeof(totalLinkedListArray); i++) {
+            currentColumn = columns[i];
+            for (int j = 0; j < totalLinkedListArray[i]; j++) {
+                if (currentColumn == NULL){
+                    currentColumn = nextCard;
+                } else {
+                    currentColumn -> next = nextCard;
+                    currentColumn = currentColumn->next;
+                }
+                nextCard = nextCard -> next;
+            }
+        }
+    }
 }
 
 void LoadDisplay(struct Node *node) {
@@ -107,10 +109,10 @@ int doesCardExists() {
     }
     printf("OK\n");
     while (fscanf(outStream, "%s", str) == 1) {
-        insertStart(&head, str);
+        insertStart(&deck, str);
     }
     fclose(outStream);
-    LoadDisplay(head);
+    LoadDisplay(deck);
     return 0; // Return success
 }
 
@@ -133,14 +135,14 @@ void PrintSpaces(int count) {
     }
 }
 
-void setVisibility(struct Node **parts){
+void setVisibility(){
+    struct Node* nextCard = deck;
     for(int i = 0; i < 7; i++){
-        struct Node *childNode = parts[i];
-        int count = LinkedlistLength(childNode);
+        int count = LinkedlistLength(columns[i]);
         for(int j = 1; j <= count - 5; j++) {
-            if (childNode != NULL) {
-                childNode->visible = 0;
-                childNode = childNode->next;
+            if (nextCard != NULL) {
+                nextCard->visible = 0;
+                nextCard = nextCard->next;
             }
         }
     }
@@ -149,46 +151,44 @@ void setVisibility(struct Node **parts){
 
 
 int FirstLoadFalse = 0;
-
-
+int maxHeight = 0;
 //Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
-    struct Node **parts = splitLinkedList(head);
-    int countArray[7];
     if (FirstLoadFalse == 0) {
-        setVisibility(parts);
+
+        setVisibility();
         FirstLoadFalse = 1;
     }
 
+
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
-        struct Node *childNode = parts[t];
-        countArray[t] = LinkedlistLength(childNode);
+        totalLinkedListArray[t] = LinkedlistLength(columns);
     }
 
     // Find max height for loop
-    int maxHeight = 0;
+
     for (int t = 0; t < 7; t++) {
-        if (countArray[t] > maxHeight) {
-            maxHeight = countArray[t];
+        if (totalLinkedListArray[t] > maxHeight) {
+            maxHeight = totalLinkedListArray[t];
         }
     }
-
+    struct Node* nextCard = deck;
     // Print the cards
     for (int h = 0; h < maxHeight; h++) {
         for (int t = 0; t < 7; t++) {
-            struct Node *childNode = parts[t];
-            int height = countArray[t];
-
+            columns[t];
+            int height = totalLinkedListArray[t];
             // If the current height is less than the number of nodes in the column
             if (h < height) {
                 // Move to the card we want to print
+
                 for (int k = 0; k < h; k++) {
-                    childNode = childNode->next;
+                    nextCard = nextCard->next;
                 }
-                if (childNode -> visible == 1){
-                    printf("\t %s", childNode->name);
+                if (nextCard -> visible == 1){
+                    printf("\t %s", nextCard->name);
                 } else{
                     printf("\t []");
                 }
@@ -200,31 +200,32 @@ void Display() {
     }
 }
 
+
+
+
+
 void FindAndReplace(char inputOne[5]){
-    struct Node **parts = splitLinkedList(head);
-    int countArray[7];
-    for (int t = 0; t < 7; t++) {
-        struct Node *childNode = parts[t];
-        countArray[t] = LinkedlistLength(childNode);
-    }
+    struct Node **parts = splitLinkedList(deck);
 
-    for (int j = 0; j < 7; j++){
+    for (int j = 0; j < 7; j++) {
         struct Node *childNode = parts[j];
-        for(int i = 0; i < countArray[j]; i++){
-            if(childNode != NULL) {
-                if (strcmp(childNode->name, inputOne) == 0){
-                    strcpy(childNode->name, "DM");
-                }
-                childNode = childNode->next;
+        while (childNode != NULL) {
+            if (strcmp(childNode->name, inputOne) == 0) {
+                strcpy(childNode->name, "DM");
             }
+            childNode = childNode->next;
         }
-
+        //totalLinkedListArray[i] = LinkedlistLength(childNode); // update with the new length
     }
-    Display();
 }
 
 int moveCards(char input[]){
     // Ensure the input is at least 6 characters long
+    if (input[2] != '-' && input[2] != '>'){
+        return 0;
+    }
+
+
     if (strlen(input) < 6) {
         printf("Invalid input format.\n");
         return 0;
@@ -249,12 +250,11 @@ int moveCards(char input[]){
 
 
 // TODO Split
-// TODO Did read Command
+
 
 
 
 void GameLoop(char str2[4]) {
-
     printf("Last Command: %s", str2);
     printf("\n Message:  %s\n", getMessage());
     printf("Input > ");
@@ -273,8 +273,6 @@ void PlayLoop(char str2[4]) {
 
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     Display();
-
-
 
 
     printf("Last Command: %s", str2);
@@ -311,7 +309,7 @@ int main() {
     GameLoop(str1);
 
     free(str1);
-    //freeLinkedList(head); // Free memory for the entire linked list
+    //freeLinkedList(deck); // Free memory for the entire linked list
 
     return 0;
 }
