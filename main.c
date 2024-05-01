@@ -116,6 +116,7 @@ char *getMessage() {
 }
 
 int totalLinkedListArray[7];
+int totalLinkedListArrayOfF[4];
 int firstTimeRun = 0;
 //Some help from chat with debug
 
@@ -186,6 +187,9 @@ int doesCardExists(char inputFileName[50]) {
         insertStart(&deck, str);
     }
     fclose(outStream);
+    for (int i = 0; i < 4; i++) {
+        finsertStart(&deckInF, "[]", i + 1);
+    }
     LoadDisplay(deck);
     return 0; // Return success
 }
@@ -245,12 +249,16 @@ void Display() {
 
     if (FirstLoadFalse == 0) {
         splitLinkedList();
+        fInsertSplit();
         setVisibility();
         FirstLoadFalse = 1;
     }
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
         totalLinkedListArray[t] = LinkedListLength(columns[t]);
+        if (t < 4) {
+            totalLinkedListArrayOfF[t] = LinkedListLengthOfF(fcolumns[t]);
+        }
     }
 
     // Find max height for loop
