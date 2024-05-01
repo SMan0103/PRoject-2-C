@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
-
+#include <dirent.h>
+#include <SDL_image.h>
 #include "Terminal.c"
 //#include "Cards.c"
 
@@ -109,29 +110,52 @@ struct cardPropety{
 struct card{
     int value;
     SDL_Rect cardPropety;
-    //SDL_Texture cardColorFuckDig;
 
 };
 
 
+void renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* rect) {
+    SDL_RenderCopy(renderer, texture, NULL, rect);
+}
+SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename) {
+    SDL_Surface* surface = SDL_LoadBMP(filename);
+    if (!surface) {
+        printf("Failed to load image %s: %s\n", filename, SDL_GetError());
+        return NULL;
+    }
 
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface); // Free the surface as it's no longer needed
+    if (!texture) {
+        printf("Failed to create texture from surface: %s\n", SDL_GetError());
+        return NULL;
+    }
 
-void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color color, int isFaceDown) {
+    return texture;
+}
+void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Texture* cardTexture, int isFaceDown) {
     if (isFaceDown) {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(renderer, cardPropety);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Blue color for facedown cards
+        SDL_RenderFillRect(renderer, cardPropety); // Draw a rectangle to represent facedown card
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderDrawRect(renderer, cardPropety);
+        SDL_RenderDrawRect(renderer, cardPropety); // Draw border for facedown card
     } else {
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-        SDL_RenderFillRect(renderer, cardPropety);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderDrawRect(renderer, cardPropety);
+        if (cardTexture) { // Render the card texture if available
+            SDL_RenderCopy(renderer, cardTexture, NULL, cardPropety);
+        } else {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Red color for other fields
+            SDL_RenderFillRect(renderer, cardPropety);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderDrawRect(renderer, cardPropety);
+        }
     }
 }
 // SUp for the cards
     void AddCardsToGUI(SDL_Renderer *renderer) {
+    char filename[] = "C:\\Users\\Chris\\Desktop\\CLionProjects\\PRoject-2-C\\PlayingCards\\c01.bmp";
 
+
+    SDL_Texture* cardTexture = loadTexture(renderer, filename);
         int startY = 25;
         int startX = 25;
         int cardW = 50;
@@ -162,7 +186,7 @@ void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color col
 
                 int Blue = (i >= StartUpPhaseForCardPlacement[j] - 5) ? 1 : 0;
 
-                drawCard(renderer, &cards.cardPropety, (Blue ? redColor : blueColor), 0);
+                drawCard(renderer, &cards.cardPropety, (Blue ? cardTexture : NULL), 0);
                 stopFor += 1;
 
             }
@@ -177,8 +201,7 @@ void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Color col
             cards.cardPropety.y = startY + i * (cardH + 15);
             cards.cardPropety.w = cardW;
             cards.cardPropety.h = cardH;
-            drawCard(renderer, &cards.cardPropety, redColor, 0);
-        }
+            drawCard(renderer, &cards.cardPropety, cardTexture, 1);        }
 
 
     }
