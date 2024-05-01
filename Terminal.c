@@ -13,7 +13,7 @@ int GameCommands(char input[]) {
 
 
     if (strcmp(input, "SW") == 0) {
-        Display();
+        displayAllCards();
 
     } else if (strcmp(input, "Sh") == 0) {
         //command2Shuffle();
@@ -28,7 +28,7 @@ int GameCommands(char input[]) {
 
             doesCardExists(inputFileName);
         } else {
-            printf("Cammand alrig in place");
+            printf("Command alrig in place");
         }
 
     } else if (strcmp(input, "ST") == 0) {
