@@ -11,6 +11,7 @@ int doesCardExists(char inputFileName[50]);
 void GameLoop();
 void Display();
 struct Node *deck = NULL; // Initialize head to NULL - This was debug from ChatGPT
+struct Node *deckInF = NULL;
 const char *Filename = "../Cards.txt";
 void PlayLoop();
 void setMessage(int value);
