@@ -433,8 +433,8 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                         previous->next = NULL;
                     }
 
-                    if(destination->value+1 == cardToMove->value){
-                        destination->next = cardToMove;
+                    if(fDestination->value+1 == cardToMove->value){
+                        fDestination->next = cardToMove;
                     }
                     return;
                 }
@@ -487,7 +487,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     }
 
                     destination->next = cardToMove;
-                  
+
                     return;
                 }
                 previous = current;
