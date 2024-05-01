@@ -10,6 +10,7 @@ const int sz = 3;
 typedef struct Node {
     char name[3];
     int visible;
+    int value;
     char FName[2];
     struct Node *next;
 } Node;
@@ -26,6 +27,7 @@ void finsertStart(struct Node **fdeck, const char *name, int i) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
     newNode->visible = 1;
+    newNode->value = 0;
     char secCard[3];
     sprintf(secCard, "F%d", i);
     strcpy(newNode->FName, secCard);
@@ -84,6 +86,35 @@ void insertStart(struct Node **deck, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
     newNode->visible = 1;
+    if(name[0] == 'A'){
+        newNode->value = 1;
+    } else if (name[0] == '2'){
+        newNode->value = 2;
+    } else if (name[0] == '3'){
+        newNode->value = 3;
+    } else if (name[0] == '4'){
+        newNode->value = 4;
+    } else if (name[0] == '5'){
+        newNode->value = 5;
+    } else if (name[0] == '6'){
+        newNode->value = 6;
+    } else if (name[0] == '7'){
+        newNode->value = 7;
+    } else if (name[0] == '8'){
+        newNode->value = 8;
+    } else if (name[0] == '9'){
+        newNode->value = 9;
+    } else if (name[0] == 'T'){
+        newNode->value = 10;
+    } else if (name[0] == 'J'){
+        newNode->value = 11;
+    } else if (name[0] == 'Q'){
+        newNode->value = 12;
+    } else if (name[0] == 'K'){
+        newNode->value = 13;
+    } else {
+        newNode->value = 0;
+    }
     newNode->next = NULL;
 
     if (*deck == NULL)
