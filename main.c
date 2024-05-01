@@ -143,7 +143,7 @@ void drawCard(SDL_Renderer* renderer, const SDL_Rect* cardPropety, SDL_Texture* 
         if (cardTexture) { // Render the card texture if available
             SDL_RenderCopy(renderer, cardTexture, NULL, cardPropety);
         } else {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Red color for other fields
+            SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255); // Red color for other fields
             SDL_RenderFillRect(renderer, cardPropety);
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderDrawRect(renderer, cardPropety);
