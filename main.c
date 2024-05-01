@@ -277,7 +277,6 @@ int maxHeight = 0;
 //Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
-
     if (FirstLoadFalse == 0) {
         splitLinkedList();
         fInsertSplit();
