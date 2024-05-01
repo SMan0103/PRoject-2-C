@@ -337,10 +337,63 @@ void Display() {
 void FindCardAndMove(char inputOne[2], char inputSec[2]) {
     struct Node *destination;
     struct Node *fDestination;
-
+    if (inputOne[1] == inputSec[1]){
+        setMessage(0);
+        return;
+    }
 
     if (inputOne[0] == 'F') {
+        for (int i = 0; i < 7; i++) {
+            struct Node *Fcurrent = columns[i];
+            struct Node *previous = NULL;
 
+            while (Fcurrent != NULL) {
+                if (strcmp(Fcurrent->FName, inputSec) == 0) {
+                    // Card to move is found in current column
+                    if (Fcurrent->visible == 0) {
+                        setMessage(0);
+                        return;
+                    } else if (Fcurrent->next != NULL) {
+                        setMessage(0);
+                        return;
+                    }
+                    fDestination = Fcurrent;
+                }
+                Fcurrent = Fcurrent->next;
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            struct Node *current = fcolumns[i];
+            struct Node *previous = NULL;
+
+            while (current != NULL) {
+                if (strcmp(current->name, inputOne) == 0) {
+                    // Card to move is found in current column
+                    struct Node *cardToMove = current;
+                    if (current->visible == 0) {
+                        return;
+                    }
+                    // Remove cardToMove from its current position
+                    if (previous == NULL) {
+                        columns[i] = current->next;
+                    } else if (previous->visible == 0) {
+                        previous->visible = 1;
+                        previous->next = NULL;
+                    } else {
+                        previous->next = NULL;
+                    }
+                    if(destination->value-1 == cardToMove->value){
+                        destination->next = cardToMove;
+                    }
+                    // Add cardToMove to the destination linked list
+                    return;
+                }
+                previous = current;
+                current = current->next;
+            }
+
+        }
+        setMessage(0);
     } else if (inputSec[0] == 'F') {
         for (int i = 0; i < 4; i++) {
             struct Node *Fcurrent = fcolumns[i];
@@ -380,8 +433,9 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                         previous->next = NULL;
                     }
 
-                    // Add cardToMove to the destination linked list
-                    fDestination->next = cardToMove;
+                    if(destination->value+1 == cardToMove->value){
+                        destination->next = cardToMove;
+                    }
                     return;
                 }
                 previous = current;
@@ -419,6 +473,9 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     if (current->visible == 0) {
                         return;
                     }
+                    if(destination->value-1 != cardToMove->value){
+                        return;
+                    }
                     // Remove cardToMove from its current position
                     if (previous == NULL) {
                         columns[i] = current->next;
@@ -428,8 +485,9 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     } else {
                         previous->next = NULL;
                     }
-                    // Add cardToMove to the destination linked list
+
                     destination->next = cardToMove;
+                  
                     return;
                 }
                 previous = current;
