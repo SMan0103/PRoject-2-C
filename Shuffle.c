@@ -61,6 +61,9 @@ int ShuffleCommand() {
 
     FILE *file = fopen("../Cards.txt", "r");
 
+
+
+
     if (file == NULL) {
         fprintf(stderr, "Error opening file.\n");
         return 1;
@@ -83,7 +86,9 @@ int ShuffleCommand() {
     // Shuffle the linked list
     shuffleCards(&head);
     //Saving the shuffled cards
-    saveListToFile(head, "../Cards.txt");
+    saveListToFile(head, "../saveFile.txt");
+
+
     // Free memory
     //freeList(head);
 }

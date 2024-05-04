@@ -208,7 +208,8 @@ int doesCardExists(char inputFileName[50]) {
     //strcmp(*Filename, inputFileName)
 
     char str[sz];
-    FILE *outStream = fopen(Filename, "r");
+
+        FILE *outStream = fopen(Filename, "r");
 
     if (outStream == NULL) {
         perror("Error opening file");

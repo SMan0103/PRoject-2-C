@@ -18,6 +18,7 @@ int GameCommands(char input[]) {
 
     } else if (strcmp(input, "Sh") == 0) {
             ShuffleCommand();
+            fileChange = 1;
 
     } else if (strcmp(input, "St") == 0) {
         //command3Split();
@@ -32,7 +33,7 @@ int GameCommands(char input[]) {
             printf("Command alrig in place");
         }
 
-    } else if (strcmp(input, "ST") == 0) {
+    } else if (strcmp(input, "QQ") == 0) {
         exit(1);
     } else if (strcmp(input, "P") == 0) {
         PlayLoop(input);

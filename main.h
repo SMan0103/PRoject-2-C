@@ -14,6 +14,7 @@ void displayAllCards();
 struct Node *deck = NULL; // Initialize head to NULL - This was debug from ChatGPT
 struct Node *deckInF = NULL;
 const char *Filename = "../Cards.txt";
+int fileChange = 0;
 void PlayLoop();
 void setMessage(int value);
 int moveCards(char input[]);
