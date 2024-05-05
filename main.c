@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Terminal.c"
+#include <string.h>
 #include "Flinkedstacks.h"
 
 
@@ -9,7 +10,7 @@
 const int sz = 3;
 
 typedef struct Node {
-    char name[2];
+    char name[4];
     int visible;
     struct Node* next;
 } Node;
@@ -121,6 +122,8 @@ int doesCardExists() {
 
 
 // This function take a linked list a return its length.
+
+// denne function skal du passe
 int LinkedListLength(struct Node* head) {
     int count = 0;
     struct Node* current = head;
@@ -165,12 +168,12 @@ void Display() {
     if (FirstLoadFalse == 0) {
         splitLinkedList();
         setVisibility();
-        //ShuffleCommand();
         FirstLoadFalse = 1;
     }
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
-        totalLinkedListArray[t] = LinkedListLength(columns[t]);
+        totalLinkedListArray[t] = LinkedListLength(columns[t]); // som du kan se her så skal vi bruge den der hedder LinkedListLength
+        // det er den der i bud og grund står for hvilken deck der skal blive brugt.
     }
 
     // Find max height for loop
@@ -311,8 +314,12 @@ int main() {
     return 0;
 }
 
+
+
 int totalLinkedListDeck[2];
 int firstTimeRunner = 0;
+
+
 struct Node** splitDeck() {
     if (firstTimeRunner == 0){
         int firstpartListLenth[] = {26, 26};
@@ -350,45 +357,55 @@ int SplitShuffle(){
 
 
 }
-typedef struct Cards {
-    char *name;
-    struct Cards *next;
-} Cards;
 
-Cards* createCard(char *name) {
-    Cards *newCard = (Cards *)malloc(sizeof(Cards));
-    newCard->name = strdup(name);
+
+
+Node * createCard(char *name) {
+    Node *newCard = (Node *)malloc(sizeof(Node));
+    if (newCard == NULL) {
+        // Handle allocation failure
+        return NULL;
+    }
+    strncpy(newCard->name, name, 2); // Copy characters from name to newCard->name
+    newCard->name[2] = '\0'; // Null-terminate the string
+    newCard->visible = 0; // Initialize visibility
     newCard->next = NULL;
     return newCard;
 }
-void shuffleCards(Cards **head){
+
+void shuffleCards(Node **head) {
     int count = 0;
-    Cards *current =*head;
-    while (current !=NULL){
+    Node *current = *head;
+
+    // Counting the number of nodes
+    while (current != NULL) {
         count++;
-        current = current -> next;
+        current = current->next;
     }
+
     srand(time(NULL));
 
-    for(int i=0; i < count * 2; i++){
+    for(int i = 0; i < count * 2; i++) {
         int index = rand() % count;
         int indey = rand() % count;
 
-        Cards *node = *head;
-        Cards *node1 = *head;
+        Node *node = *head;
+        Node *node1 = *head;
 
         for (int j = 0; j < index; j++)
-            node = node -> next;
+            node = node->next;
         for (int j = 0; j < indey; j++)
-            node1 = node1 -> next;
+            node1 = node1->next;
 
-        char *temp = node -> name;
-        node -> name = node1 -> name;
-        node1 -> name = temp;
+        // Swap the names (strings)
+        char temp[50]; // Temporary array to hold the name
+        strcpy(temp, node->name);
+        strcpy(node->name, node1->name);
+        strcpy(node1->name, temp);
     }
 }
 
-void saveListToFile(struct Cards *head, const char *filename) {
+void saveListToFile(struct Node *head, const char *filename) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
         fprintf(stderr, "Error opening file for writing.\n");
@@ -403,6 +420,8 @@ void saveListToFile(struct Cards *head, const char *filename) {
 }
 
 
+int FirstLoadFalseX = 0;
+int maxHeightX = 0;
 int ShuffleCommand() {
     FILE *file = fopen("../ShuffledCards.txt", "r");
 
@@ -412,8 +431,8 @@ int ShuffleCommand() {
     }
 
     char cardName[4];
-    Cards *head = NULL;
-    Cards *current = NULL;
+    Node *head = NULL;
+    Node *current = NULL;
     while (fscanf(file, "%s", cardName) == 1) {
         if (head == NULL) {
             head = createCard(cardName);
@@ -425,14 +444,17 @@ int ShuffleCommand() {
     }
     fclose(file);
 
-    // Shuffle the linked list
     shuffleCards(&head);
     saveListToFile(head, "../ShuffledCards.txt");
-    // Distribute shuffled cards to columns
+
+
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    int StartUpPhaseForCardPlacement[] = {1, 6, 7, 8, 9, 10, 11};
+
     current = head;
     for (int i = 0; i < 7; i++) {
         columns[i] = NULL; // Clear existing column
-        for (int j = 0; j < 13; j++) {
+        for (int j = 0; j < StartUpPhaseForCardPlacement[i]; j++) {
             if (current != NULL) {
                 insertStart(&columns[i], current->name);
                 current = current->next;
@@ -440,13 +462,11 @@ int ShuffleCommand() {
                 break; // No more cards to distribute
             }
         }
+        setVisibility();
     }
-    // Display the updated board
-
-
-    // Save the shuffled cards to file
+    // Print the cards
+    Display();
 
 
     return 0;
 }
-
