@@ -136,7 +136,7 @@ void setMessage(int value) {
     char Ok[5] = "OK";
     char fail[5] = "Fail";
 
-    if (value == 0) {
+    if (value == 1) {
         strcpy(Message, Ok);
     } else {
         strcpy(Message, fail);
@@ -273,6 +273,7 @@ void setVisibility() {
 }
 void displayAllCards() {
     struct Node *node = deck;
+
     int count = 0; // Count to keep track of the number of elements printed in a row
     int countFKeys = 0;
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
@@ -291,6 +292,10 @@ void displayAllCards() {
     }
 
     printf("\n");
+    setMessage(1);
+    if (count == 0){
+        setMessage(0);
+    }
 }
 
 int FirstLoadFalse = 0;
@@ -407,6 +412,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                         destination->next = cardToMove;
                     }
                     // Add cardToMove to the destination linked list
+                    setMessage(1);
                     return;
                 }
                 previous = current;
@@ -531,6 +537,7 @@ int moveCards(char input[]) {
         countChar = i + 1;
     }
     if (whereIsWaldow == 0) {
+        setMessage(0);
         return 0;
     }
     if (input[whereIsWaldow] != '-' && input[whereIsWaldow + 1] != '>') {
@@ -555,16 +562,46 @@ int moveCards(char input[]) {
     return 0;
 }
 
-
-
-
-
-
-
 // TODO Split
+void saveDeck(char input[50]){
+    int i = 3;
+    char filename2[50];
+    while(input[i] != NULL){
+        filename2[i-3] = input[i];
+        i += 1;
+    }
+    if(filename2[0] == 0){
+        strcpy(filename2, "../savedcards/cards.txt");
+    }
 
 
+    FILE *file = fopen(filename2, "w");
 
+    struct Node *destination;
+    struct Node *fDestination;
+    for (int i = 0; i < 7; i++) {
+        struct Node *Fcurrent = columns[i];
+
+        while (Fcurrent != NULL) {
+            fprintf(file, "%s\n", Fcurrent->name);
+            Fcurrent = Fcurrent->next;
+        }
+    }
+
+
+    for (int i = 0; i < 4; i++) {
+        struct Node *current = fcolumns[i];
+
+        while (current != NULL) {
+            fprintf(file, "%s\n", current->name);
+            current = current->next;
+        }
+
+    }
+
+    fclose(file);
+
+}
 
 void GameLoop(char str2[4]) {
     printf("Last Command: %s", str2);

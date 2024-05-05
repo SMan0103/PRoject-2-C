@@ -18,3 +18,4 @@ int fileChange = 0;
 void PlayLoop();
 void setMessage(int value);
 int moveCards(char input[]);
+void saveDeck(char input[]);

@@ -16,6 +16,9 @@ int GameCommands(char input[]) {
     if (strcmp(input, "SW") == 0) {
         displayAllCards();
 
+
+
+
     } else if (strcmp(input, "Sh") == 0) {
             ShuffleCommand();
             fileChange = 1;
@@ -37,22 +40,23 @@ int GameCommands(char input[]) {
         exit(1);
     } else if (strcmp(input, "P") == 0) {
         PlayLoop(input);
+    } else if (input[0] == 'S' && input[1] == 'D') {
+        saveDeck(input);
+
     } else {
         printf("Invalid Command");
         setMessage(0);
     }
-
-    setMessage(0);
     GameLoop(input);
     return 0;
 }
 int PlayCommands(char input[]){
 
     if (strcmp(input, "Q") == 0) {
-        GameLoop();
-    }else {
+        setMessage(1);
+        GameLoop(input);
+    } else {
         moveCards(input);
     }
-    setMessage(0);
     return 0;
 }
