@@ -16,19 +16,16 @@ int GameCommands(char input[]) {
     if (strcmp(input, "SW") == 0) {
         Display();
 
-    } else if (strcmp(input, "Sh") == 0) {
+    } else if (strcmp(input, "SR") == 0) {
         ShuffleCommand();
 
     } else if (strcmp(input, "St") == 0) {
         SplitShuffle();
 
     } else if (strcmp(input, "LD") == 0) {
-        if(LDfalse == 0 ){
-            LDfalse = 1;
+
             doesCardExists();
-        } else {
-            printf("Cammand alrig in place");
-        }
+
 
     } else if (strcmp(input, "ST") == 0) {
         exit(1);

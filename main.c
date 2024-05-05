@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 #include "Terminal.c"
 #include "Flinkedstacks.h"
 
@@ -103,7 +103,7 @@ void LoadDisplay(struct Node *node) {
 
 int doesCardExists() {
     char str[sz];
-    FILE *outStream = fopen(Filename, "r");
+    FILE *outStream = fopen("../ShuffledCards.txt", "r");
 
     if (outStream == NULL) {
         perror("Error opening file");
@@ -349,3 +349,104 @@ int SplitShuffle(){
 
 
 }
+typedef struct Cards {
+    char *name;
+    struct Cards *next;
+} Cards;
+
+Cards* createCard(char *name) {
+    Cards *newCard = (Cards *)malloc(sizeof(Cards));
+    newCard->name = strdup(name);
+    newCard->next = NULL;
+    return newCard;
+}
+void shuffleCards(Cards **head){
+    int count = 0;
+    Cards *current =*head;
+    while (current !=NULL){
+        count++;
+        current = current -> next;
+    }
+    srand(time(NULL));
+
+    for(int i=0; i < count * 2; i++){
+        int index = rand() % count;
+        int indey = rand() % count;
+
+        Cards *node = *head;
+        Cards *node1 = *head;
+
+        for (int j = 0; j < index; j++)
+            node = node -> next;
+        for (int j = 0; j < indey; j++)
+            node1 = node1 -> next;
+
+        char *temp = node -> name;
+        node -> name = node1 -> name;
+        node1 -> name = temp;
+    }
+}
+
+void saveListToFile(struct Cards *head, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        return;
+    }
+    while (head != NULL) {
+        fprintf(file, "%s\n", head->name);
+        head = head->next;
+    }
+
+    fclose(file);
+}
+
+
+int ShuffleCommand() {
+    FILE *file = fopen("../ShuffledCards.txt", "r");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file.\n");
+        return 1;
+    }
+
+    char cardName[4];
+    Cards *head = NULL;
+    Cards *current = NULL;
+    while (fscanf(file, "%s", cardName) == 1) {
+        if (head == NULL) {
+            head = createCard(cardName);
+            current = head;
+        } else {
+            current->next = createCard(cardName);
+            current = current->next;
+        }
+    }
+    fclose(file);
+
+    // Shuffle the linked list
+    shuffleCards(&head);
+
+    // Distribute shuffled cards to columns
+    current = head;
+    for (int i = 0; i < 7; i++) {
+        columns[i] = NULL; // Clear existing column
+        for (int j = 0; j < 7; j++) {
+            if (current != NULL) {
+                insertStart(&columns[i], current->name);
+                current = current->next;
+            } else {
+                break; // No more cards to distribute
+            }
+        }
+    }
+
+    // Display the updated board
+    Display();
+
+    // Save the shuffled cards to file
+    saveListToFile(head, "../ShuffledCards.txt");
+
+    return 0;
+}
+
