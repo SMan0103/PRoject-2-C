@@ -20,7 +20,7 @@ int GameCommands(char input[]) {
         ShuffleCommand();
 
     } else if (strcmp(input, "St") == 0) {
-        //command3Split();
+        SplitShuffle();
 
     } else if (strcmp(input, "LD") == 0) {
         if(LDfalse == 0 ){
@@ -46,7 +46,10 @@ int PlayCommands(char input[]){
 
     if (strcmp(input, "Q") == 0) {
         GameLoop();
-    }else {
+    } else if (strcmp(input, "St") == 0) {
+        SplitShuffle();
+
+    } else {
         moveCards(input);
 
     }

@@ -309,3 +309,43 @@ int main() {
 
     return 0;
 }
+
+int totalLinkedListDeck[2];
+int firstTimeRunner = 0;
+struct Node** splitDeck() {
+    if (firstTimeRunner == 0){
+        int firstpartListLenth[] = {26, 26};
+        for(int i = 0; i < 2; i++){
+            totalLinkedListDeck[i] = firstpartListLenth[i];
+        }
+        firstTimeRunner += 1;
+    }
+
+    struct Node* nextCard = deck;
+    struct Node* currentColumn = NULL;
+
+    for (int i = 0; i < 2; i++) {
+        currentColumn = NULL;
+        for (int j = 0; j < totalLinkedListDeck[i]; j++) {
+            if (currentColumn == NULL) {
+                columns[i] = nextCard;
+                currentColumn = nextCard;
+            } else {
+                currentColumn->next = nextCard;
+                currentColumn = currentColumn->next;
+            }
+            nextCard = nextCard->next;
+        }
+        if (currentColumn != NULL) {
+            currentColumn->next = NULL; // Disconnect the current segment from the rest
+        }
+    }
+
+    return columns;
+}
+
+int SplitShuffle(){
+    splitDeck();
+
+
+}

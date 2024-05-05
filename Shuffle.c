@@ -59,7 +59,7 @@ void saveListToFile(struct Cards *head, const char *filename) {
 
 int ShuffleCommand() {
 
-    FILE *file = fopen("C:\\Users\\PC\\Desktop\\CLionProjects\\PRoject-2-C\\Cards.txt", "r");
+    FILE *file = fopen("../Cards.txt", "r");
 
     if (file == NULL) {
         fprintf(stderr, "Error opening file.\n");
@@ -83,18 +83,8 @@ int ShuffleCommand() {
     // Shuffle the linked list
     shuffleCards(&head);
     //Saving the shuffled cards
-    saveListToFile(head, "C:\\Users\\PC\\Desktop\\CLionProjects\\PRoject-2-C\\Cards.txt");
+    saveListToFile(head, "../Cards.txt");
     // Free memory
     //freeList(head);
 }
-//Memory leak problems
 
-//void freeList(Cards *head) {
-//  Cards *temp;
-//while (head != NULL) {
-//  temp = head;
-//head = head->next;
-//free(temp->name);
-//free(temp);
-//}
-//}
