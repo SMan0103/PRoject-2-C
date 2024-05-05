@@ -4,32 +4,127 @@
 #include "Terminal.c"
 #include <string.h>
 #include "Flinkedstacks.h"
-
+#include "Shuffle.c"
 
 
 const int sz = 3;
 
 typedef struct Node {
-    char name[4];
+    char name[3];
     int visible;
-    struct Node* next;
+    int value;
+    char FName[2];
+    struct Node *next;
 } Node;
 
 
-struct Node* columns[7];
+struct Node *columns[7];
+struct Node *fcolumns[4];
+
+int ffirstTimeRun = 0;
+int ftotalLinkedListArray[4];
+
+
+void finsertStart(struct Node **fdeck, const char *name, int i) {
+    struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
+    strcpy(newNode->name, name);
+    newNode->visible = 1;
+    newNode->value = 0;
+    char secCard[3];
+    sprintf(secCard, "F%d", i);
+    strcpy(newNode->FName, secCard);
+
+    strcpy(newNode->FName, secCard);
+    newNode->next = NULL;
+
+    if (*fdeck == NULL)
+        *fdeck = newNode;
+    else {
+        struct Node *lastNode = *fdeck;
+
+        while (lastNode->next != NULL) {
+            lastNode = lastNode->next;
+        }
+        lastNode->next = newNode;
+    }
+
+}
+
+
+struct Node **fInsertSplit() {
+    if (ffirstTimeRun == 0) {
+        int firstpartListLenth[] = {1, 1, 1, 1};
+        for (int i = 0; i < 4; i++) {
+            ftotalLinkedListArray[i] = firstpartListLenth[i];
+        }
+        ffirstTimeRun += 1;
+    }
+
+    struct Node *nextCardToF = deckInF;
+    struct Node *currentFColumn = NULL;
+
+    for (int i = 0; i < 4; i++) {
+        currentFColumn = NULL;
+        for (int j = 0; j < ftotalLinkedListArray[i]; j++) {
+            if (currentFColumn == NULL) {
+                fcolumns[i] = nextCardToF;
+                currentFColumn = nextCardToF;
+            } else {
+                currentFColumn->next = nextCardToF;
+                currentFColumn = currentFColumn->next;
+            }
+            nextCardToF = nextCardToF->next;
+        }
+        if (currentFColumn != NULL) {
+            currentFColumn->next = NULL; // Disconnect the current segment from the rest
+        }
+    }
+
+    return fcolumns;
+}
+
 
 void insertStart(struct Node **deck, const char *name) {
     struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
     strcpy(newNode->name, name);
     newNode->visible = 1;
+    if(name[0] == 'A'){
+        newNode->value = 1;
+    } else if (name[0] == '2'){
+        newNode->value = 2;
+    } else if (name[0] == '3'){
+        newNode->value = 3;
+    } else if (name[0] == '4'){
+        newNode->value = 4;
+    } else if (name[0] == '5'){
+        newNode->value = 5;
+    } else if (name[0] == '6'){
+        newNode->value = 6;
+    } else if (name[0] == '7'){
+        newNode->value = 7;
+    } else if (name[0] == '8'){
+        newNode->value = 8;
+    } else if (name[0] == '9'){
+        newNode->value = 9;
+    } else if (name[0] == 'T'){
+        newNode->value = 10;
+    } else if (name[0] == 'J'){
+        newNode->value = 11;
+    } else if (name[0] == 'Q'){
+        newNode->value = 12;
+    } else if (name[0] == 'K'){
+        newNode->value = 13;
+    } else {
+        newNode->value = 0;
+    }
     newNode->next = NULL;
 
-    if(*deck == NULL)
+    if (*deck == NULL)
         *deck = newNode;
-    else{
-        struct Node* lastNode = *deck;
+    else {
+        struct Node *lastNode = *deck;
 
-        while(lastNode -> next != NULL){
+        while (lastNode->next != NULL) {
             lastNode = lastNode->next;
         }
         lastNode->next = newNode;
@@ -42,30 +137,34 @@ void setMessage(int value) {
     char Ok[5] = "OK";
     char fail[5] = "Fail";
 
-    if (value == 0) {
-        *Message = *fail;
+    if (value == 1) {
+        strcpy(Message, Ok);
     } else {
-        *Message = *Ok;
+        strcpy(Message, fail);
     }
 }
 
 char *getMessage() {
     return Message;
 }
+
 int totalLinkedListArray[7];
+int totalLinkedListArrayOfF[4];
 int firstTimeRun = 0;
 //Some help from chat with debug
-struct Node** splitLinkedList() {
-    if (firstTimeRun == 0){
+
+
+struct Node **splitLinkedList() {
+    if (firstTimeRun == 0) {
         int firstpartListLenth[] = {1, 6, 7, 8, 9, 10, 11};
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             totalLinkedListArray[i] = firstpartListLenth[i];
         }
         firstTimeRun += 1;
     }
 
-    struct Node* nextCard = deck;
-    struct Node* currentColumn = NULL;
+    struct Node *nextCard = deck;
+    struct Node *currentColumn = NULL;
 
     for (int i = 0; i < 7; i++) {
         currentColumn = NULL;
@@ -89,6 +188,7 @@ struct Node** splitLinkedList() {
 
 void LoadDisplay(struct Node *node) {
     int count = 0; // Count to keep track of the number of elements printed in a row
+    int countFKeys = 0;
     printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     while (node != NULL) {
         count++;
@@ -98,13 +198,19 @@ void LoadDisplay(struct Node *node) {
             printf("\n");
 
         node = node->next;
+
     }
+
     printf("\n");
 }
 
-int doesCardExists() {
+int doesCardExists(char inputFileName[50]) {
+
+    //strcmp(*Filename, inputFileName)
+
     char str[sz];
-    FILE *outStream = fopen("../ShuffledCards.txt", "r");
+
+        FILE *outStream = fopen("../ShuffledCards.txt", "r");
 
     if (outStream == NULL) {
         perror("Error opening file");
@@ -115,18 +221,28 @@ int doesCardExists() {
         insertStart(&deck, str);
     }
     fclose(outStream);
+    for (int i = 0; i < 4; i++) {
+        finsertStart(&deckInF, "[]", i + 1);
+    }
     LoadDisplay(deck);
     return 0; // Return success
 }
 
 
-
 // This function take a linked list a return its length.
-
-// denne function skal du passe
-int LinkedListLength(struct Node* head) {
+int LinkedListLength(struct Node *head) {
     int count = 0;
-    struct Node* current = head;
+    struct Node *current = head;
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+int LinkedListLengthOfF(struct Node *fcolumns) {
+    int count = 0;
+    struct Node *current = fcolumns;
     while (current != NULL) {
         count++;
         current = current->next;
@@ -143,11 +259,11 @@ void PrintSpaces(int count) {
     }
 }
 
-void setVisibility(){
-    for(int i = 0; i < 7; i++){
-        struct Node* current = columns[i];
+void setVisibility() {
+    for (int i = 0; i < 7; i++) {
+        struct Node *current = columns[i];
         int count = LinkedListLength(columns[i]);
-        for(int j = 1; j <= count - 5; j++) {
+        for (int j = 1; j <= count - 5; j++) {
             if (current != NULL) {
                 current->visible = 0;
                 current = current->next;
@@ -156,24 +272,51 @@ void setVisibility(){
 
     }
 }
+void displayAllCards() {
+    struct Node *node = deck;
 
+    int count = 0; // Count to keep track of the number of elements printed in a row
+    int countFKeys = 0;
+    printf("\tC1\tC2\tC3\tC4\tC5\tC6\tC7\n");
+    while (node != NULL) {
+        printf("\t %s ", node->name);
 
+        count++;
+
+        // If 7 elements have been printed, start a new line - This was help from ChatGPT
+
+        if (count % 7 == 0)
+            printf("\n");
+
+        countFKeys += 1;
+        node = node->next;
+    }
+
+    printf("\n");
+    setMessage(1);
+    if (count == 0){
+        setMessage(0);
+    }
+}
 
 int FirstLoadFalse = 0;
 int maxHeight = 0;
+
 //Some help from ChatGPT with the use of PrintSpaces and Recalculated the MaxHeight
 //The other section code is selfmade, that was used to promt ChatGPT
 void Display() {
-
     if (FirstLoadFalse == 0) {
         splitLinkedList();
+        fInsertSplit();
         setVisibility();
         FirstLoadFalse = 1;
     }
     // Calculate lengths of sublists
     for (int t = 0; t < 7; t++) {
-        totalLinkedListArray[t] = LinkedListLength(columns[t]); // som du kan se her så skal vi bruge den der hedder LinkedListLength
-        // det er den der i bud og grund står for hvilken deck der skal blive brugt.
+        totalLinkedListArray[t] = LinkedListLength(columns[t]);
+        if (t < 4) {
+            totalLinkedListArrayOfF[t] = LinkedListLengthOfF(fcolumns[t]);
+        }
     }
 
     // Find max height for loop
@@ -182,15 +325,15 @@ void Display() {
             maxHeight = totalLinkedListArray[t];
         }
     }
-    struct Node* nextCard = deck;
+    int countFKeys = 0;
     // Print the cards
-    for (int h = 0; h < maxHeight; h++) {
+    for (int h = 0; h < maxHeight || h < 7; h++) {
         for (int t = 0; t < 7; t++) {
             int height = totalLinkedListArray[t];
             // If the current height is less than the number of nodes in the column
             if (h < height) {
                 // Move to the card we want to print
-                struct Node* current = columns[t];
+                struct Node *current = columns[t];
                 for (int k = 0; k < h; k++) {
                     current = current->next;
                 }
@@ -203,56 +346,263 @@ void Display() {
                 PrintSpaces(1); // Print empty space
             }
         }
+
+        if (h % 2 == 0 && countFKeys < 4) {
+            struct Node *fcurrent = fcolumns[countFKeys];
+            while (fcurrent->next != NULL) {
+                fcurrent = fcurrent->next;
+            }
+            printf("\t%s", fcurrent->name);
+            printf("\t F%d", countFKeys + 1);
+            countFKeys += 1;
+        }
         printf("\n");
     }
 }
 
-void FindAndReplace(char inputOne[5], char inputSec[5]){
-    for(int i = 0; i < 7; i++){
-        struct Node* current = columns[i];
-        int count = LinkedListLength(columns[i]);
-        for(int j = 0; j < count; j++) {
-            if (current != NULL) {
+//Debug help from ChatGPT
+void FindCardAndMove(char inputOne[2], char inputSec[2]) {
+    struct Node *destination;
+    struct Node *fDestination;
+    if (inputOne[1] == inputSec[1]){
+        setMessage(0);
+        return;
+    }
+
+    if (inputOne[0] == 'F') {
+        for (int i = 0; i < 7; i++) {
+            struct Node *Fcurrent = columns[i];
+            struct Node *previous = NULL;
+
+            while (Fcurrent != NULL) {
+                if (strcmp(Fcurrent->FName, inputSec) == 0) {
+                    // Card to move is found in current column
+                    if (Fcurrent->visible == 0) {
+                        setMessage(0);
+                        return;
+                    } else if (Fcurrent->next != NULL) {
+                        setMessage(0);
+                        return;
+                    }
+                    fDestination = Fcurrent;
+                }
+                Fcurrent = Fcurrent->next;
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            struct Node *current = fcolumns[i];
+            struct Node *previous = NULL;
+
+            while (current != NULL) {
                 if (strcmp(current->name, inputOne) == 0) {
-                    strcpy(current->name, inputSec);
+                    // Card to move is found in current column
+                    struct Node *cardToMove = current;
+                    if (current->visible == 0) {
+                        return;
+                    }
+                    // Remove cardToMove from its current position
+                    if (previous == NULL) {
+                        columns[i] = current->next;
+                    } else if (previous->visible == 0) {
+                        previous->visible = 1;
+                        previous->next = NULL;
+                    } else {
+                        previous->next = NULL;
+                    }
+                    if(destination->value-1 == cardToMove->value){
+                        destination->next = cardToMove;
+                    }
+                    // Add cardToMove to the destination linked list
+                    setMessage(1);
+                    return;
+                }
+                previous = current;
+                current = current->next;
+            }
+
+        }
+        setMessage(0);
+    } else if (inputSec[0] == 'F') {
+        for (int i = 0; i < 4; i++) {
+            struct Node *Fcurrent = fcolumns[i];
+            struct Node *previous = NULL;
+
+            while (Fcurrent != NULL) {
+                if (strcmp(Fcurrent->FName, inputSec) == 0) {
+                    // Card to move is found in current column
+                    if (Fcurrent->visible == 0) {
+                        return;
+                    } else if (Fcurrent->next != NULL) {
+                        return;
+                    }
+                    fDestination = Fcurrent;
+                }
+                Fcurrent = Fcurrent->next;
+            }
+        }
+        for (int i = 0; i < 7; i++) {
+            struct Node *current = columns[i];
+            struct Node *previous = NULL;
+
+            while (current != NULL) {
+                if (strcmp(current->name, inputOne) == 0) {
+                    // Card to move is found in current column
+                    struct Node *cardToMove = current;
+                    if (current->visible == 0) {
+                        return;
+                    }
+                    // Remove cardToMove from its current position
+                    if (previous == NULL) {
+                        columns[i] = current->next;
+                    } else if (previous->visible == 0) {
+                        previous->visible = 1;
+                        previous->next = NULL;
+                    } else {
+                        previous->next = NULL;
+                    }
+
+                    if(fDestination->value+1 == cardToMove->value){
+                        fDestination->next = cardToMove;
+                    }
+                    return;
+                }
+                previous = current;
+                current = current->next;
+            }
+
+        }
+
+    } else {
+        for (int i = 0;i < 7; i++) {
+            struct Node *current = columns[i];
+            struct Node *previous = NULL;
+
+            while (current != NULL) {
+                if (strcmp(current->name, inputSec) == 0) {
+                    // Card to move is found in current column
+                    if (current->visible == 0) {
+                        return;
+                    } else if (current->next != NULL) {
+                        return;
+                    }
+                    destination = current;
                 }
                 current = current->next;
             }
         }
+        for (int i = 0;i < 7; i++) {
+            struct Node *current = columns[i];
+            struct Node *previous = NULL;
+
+            while (current != NULL) {
+                if (strcmp(current->name, inputOne) == 0) {
+                    // Card to move is found in current column
+                    struct Node *cardToMove = current;
+                    if (current->visible == 0) {
+                        return;
+                    }
+                    if(destination->value-1 != cardToMove->value){
+                        return;
+                    }
+                    // Remove cardToMove from its current position
+                    if (previous == NULL) {
+                        columns[i] = current->next;
+                    } else if (previous->visible == 0) {
+                        previous->visible = 1;
+                        previous->next = NULL;
+                    } else {
+                        previous->next = NULL;
+                    }
+
+                    destination->next = cardToMove;
+
+                    return;
+                }
+                previous = current;
+                current = current->next;
+            }
+        }
     }
+    printf("Card not found.\n");
 }
 
-int moveCards(char input[]){
+int moveCards(char input[]) {
     // Ensure the input is at least 6 characters long
-    if (input[2] != '-' && input[2] != '>'){
+    int whereIsWaldow = 0;
+    int countChar = 0;
+    for (int i = 0; input[i] != 0; i++) {
+
+        if (input[i] == '-') {
+            whereIsWaldow = i;
+        }
+        countChar = i + 1;
+    }
+    if (whereIsWaldow == 0) {
+        setMessage(0);
         return 0;
     }
-
-
+    if (input[whereIsWaldow] != '-' && input[whereIsWaldow + 1] != '>') {
+        setMessage(0);
+        return 0;
+    }
     if (strlen(input) < 6) {
         printf("Invalid input format.\n");
+        setMessage(0);
         return 0;
     }
 
-    // Extract the first and second cards from the input string
-    char firstCard[3] = {input[0], input[1], '\0'};
-    char secCard[3] = {input[4], input[5], '\0'};
+    if (whereIsWaldow == 2 && countChar == 6) {
+        char firstCard[3] = {input[0], input[1]};
+        char secCard[3] = {input[4], input[5]};
+        FindCardAndMove(firstCard, secCard);
+    } else {
+        return 0;
+    }
 
-    // Call FindAndReplace with the first card
-    FindAndReplace(firstCard, secCard);
-
+    setMessage(1);
     return 0;
 }
 
-
-
-
-
-
 // TODO Split
+void saveDeck(char input[50]){
+    int i = 3;
+    char filename2[50];
+    while(input[i] != NULL){
+        filename2[i-3] = input[i];
+        i += 1;
+    }
+    if(filename2[0] == 0){
+        strcpy(filename2, "../savedcards/cards.txt");
+    }
 
 
+    FILE *file = fopen(filename2, "w");
 
+    struct Node *destination;
+    struct Node *fDestination;
+    for (int i = 0; i < 7; i++) {
+        struct Node *Fcurrent = columns[i];
+
+        while (Fcurrent != NULL) {
+            fprintf(file, "%s\n", Fcurrent->name);
+            Fcurrent = Fcurrent->next;
+        }
+    }
+
+
+    for (int i = 0; i < 4; i++) {
+        struct Node *current = fcolumns[i];
+
+        while (current != NULL) {
+            fprintf(file, "%s\n", current->name);
+            current = current->next;
+        }
+
+    }
+
+    fclose(file);
+
+}
 
 void GameLoop(char str2[4]) {
     printf("Last Command: %s", str2);
@@ -431,46 +781,3 @@ int ShuffleCommand() {
     return 0;
 }
 
-int splitDeck() {
-    FILE *file = fopen("../ShuffledCards.txt", "r");
-
-    if (file == NULL) {
-        fprintf(stderr, "Error opening file.\n");
-        return 1;
-    }
-
-    char cardName[4];
-    Node *head = NULL;
-    Node *current = NULL;
-    while (fscanf(file, "%s", cardName) == 1) {
-        if (head == NULL) {
-            head = createCard(cardName);
-            current = head;
-        } else {
-            current->next = createCard(cardName);
-            current = current->next;
-        }
-    }
-    fclose(file);
-    splitDeck();
-    saveListToFile(head, "../ShuffledCards.txt");
-    printf("\tC1\tC2\n");
-    int StartUpPhaseForCardPlacement[] = {26, 26};
-
-    current = head;
-    for (int i = 0; i < 7; i++) {
-        columns[i] = NULL; // Clear existing column
-        for (int j = 0; j < StartUpPhaseForCardPlacement[i]; j++) {
-            if (current != NULL) {
-                insertStart(&columns[i], current->name);
-                current = current->next;
-            } else {
-                break; // No more cards to distribute
-            }
-        }
-    }
-    // Print the cards
-    Display();
-
-    return 0;
-}

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include  "main.h"
-#include "Shuffle.h"
 
 //void command1ShowCards();
 //void command2Shuffle();
@@ -14,41 +13,45 @@ int GameCommands(char input[]) {
 
 
     if (strcmp(input, "SW") == 0) {
-        Display();
+        displayAllCards();
+
+
+
 
     } else if (strcmp(input, "SR") == 0) {
-        ShuffleCommand();
+            ShuffleCommand();
+            fileChange = 1;
 
     } else if (strcmp(input, "Sl") == 0) {
-        splitDeck();
+        //splitDeck();
     } else if (strcmp(input, "LD") == 0) {
 
-            doesCardExists();
+            char inputFileName[50] = "../ShuffledCards.txt";
+
+            doesCardExists(inputFileName);
 
 
-    } else if (strcmp(input, "ST") == 0) {
+    } else if (strcmp(input, "QQ") == 0) {
         exit(1);
     } else if (strcmp(input, "P") == 0) {
         PlayLoop(input);
+    } else if (input[0] == 'S' && input[1] == 'D') {
+        saveDeck(input);
+
     } else {
         printf("Invalid Command");
+        setMessage(0);
     }
-
-    setMessage(0);
     GameLoop(input);
     return 0;
 }
 int PlayCommands(char input[]){
 
     if (strcmp(input, "Q") == 0) {
-        GameLoop();
-    } else if (strcmp(input, "St") == 0) {
-        splitDeck();
-
+        setMessage(1);
+        GameLoop(input);
     } else {
         moveCards(input);
-
     }
-    setMessage(0);
     return 0;
 }
