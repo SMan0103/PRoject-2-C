@@ -19,9 +19,8 @@ int GameCommands(char input[]) {
     } else if (strcmp(input, "SR") == 0) {
         ShuffleCommand();
 
-    } else if (strcmp(input, "St") == 0) {
-        SplitShuffle();
-
+    } else if (strcmp(input, "Sl") == 0) {
+        splitDeck();
     } else if (strcmp(input, "LD") == 0) {
 
             doesCardExists();
@@ -44,7 +43,7 @@ int PlayCommands(char input[]){
     if (strcmp(input, "Q") == 0) {
         GameLoop();
     } else if (strcmp(input, "St") == 0) {
-        SplitShuffle();
+        splitDeck();
 
     } else {
         moveCards(input);

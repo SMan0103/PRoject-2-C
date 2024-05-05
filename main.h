@@ -15,4 +15,4 @@ const char *Filename = "../ShuffledCards.txt";
 void PlayLoop();
 void setMessage(int value);
 int moveCards(char input[]);
-int SplitShuffle();
+int splitDeck();

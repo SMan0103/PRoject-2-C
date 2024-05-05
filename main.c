@@ -320,46 +320,6 @@ int totalLinkedListDeck[2];
 int firstTimeRunner = 0;
 
 
-struct Node** splitDeck() {
-    if (firstTimeRunner == 0){
-        int firstpartListLenth[] = {26, 26};
-        for(int i = 0; i < 2; i++){
-            totalLinkedListDeck[i] = firstpartListLenth[i];
-        }
-        firstTimeRunner += 1;
-    }
-
-    struct Node* nextCard = deck;
-    struct Node* currentColumn = NULL;
-
-    for (int i = 0; i < 2; i++) {
-        currentColumn = NULL;
-        for (int j = 0; j < totalLinkedListDeck[i]; j++) {
-            if (currentColumn == NULL) {
-                columns[i] = nextCard;
-                currentColumn = nextCard;
-            } else {
-                currentColumn->next = nextCard;
-                currentColumn = currentColumn->next;
-            }
-            nextCard = nextCard->next;
-        }
-        if (currentColumn != NULL) {
-            currentColumn->next = NULL; // Disconnect the current segment from the rest
-        }
-    }
-
-    return columns;
-}
-
-int SplitShuffle(){
-    splitDeck();
-
-
-}
-
-
-
 Node * createCard(char *name) {
     Node *newCard = (Node *)malloc(sizeof(Node));
     if (newCard == NULL) {
@@ -372,6 +332,7 @@ Node * createCard(char *name) {
     newCard->next = NULL;
     return newCard;
 }
+
 
 void shuffleCards(Node **head) {
     int count = 0;
@@ -420,8 +381,7 @@ void saveListToFile(struct Node *head, const char *filename) {
 }
 
 
-int FirstLoadFalseX = 0;
-int maxHeightX = 0;
+
 int ShuffleCommand() {
     FILE *file = fopen("../ShuffledCards.txt", "r");
 
@@ -467,6 +427,50 @@ int ShuffleCommand() {
     // Print the cards
     Display();
 
+
+    return 0;
+}
+
+int splitDeck() {
+    FILE *file = fopen("../ShuffledCards.txt", "r");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file.\n");
+        return 1;
+    }
+
+    char cardName[4];
+    Node *head = NULL;
+    Node *current = NULL;
+    while (fscanf(file, "%s", cardName) == 1) {
+        if (head == NULL) {
+            head = createCard(cardName);
+            current = head;
+        } else {
+            current->next = createCard(cardName);
+            current = current->next;
+        }
+    }
+    fclose(file);
+    splitDeck();
+    saveListToFile(head, "../ShuffledCards.txt");
+    printf("\tC1\tC2\n");
+    int StartUpPhaseForCardPlacement[] = {26, 26};
+
+    current = head;
+    for (int i = 0; i < 7; i++) {
+        columns[i] = NULL; // Clear existing column
+        for (int j = 0; j < StartUpPhaseForCardPlacement[i]; j++) {
+            if (current != NULL) {
+                insertStart(&columns[i], current->name);
+                current = current->next;
+            } else {
+                break; // No more cards to distribute
+            }
+        }
+    }
+    // Print the cards
+    Display();
 
     return 0;
 }
