@@ -165,6 +165,7 @@ void Display() {
     if (FirstLoadFalse == 0) {
         splitLinkedList();
         setVisibility();
+        //ShuffleCommand();
         FirstLoadFalse = 1;
     }
     // Calculate lengths of sublists
@@ -426,12 +427,12 @@ int ShuffleCommand() {
 
     // Shuffle the linked list
     shuffleCards(&head);
-
+    saveListToFile(head, "../ShuffledCards.txt");
     // Distribute shuffled cards to columns
     current = head;
     for (int i = 0; i < 7; i++) {
         columns[i] = NULL; // Clear existing column
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 13; j++) {
             if (current != NULL) {
                 insertStart(&columns[i], current->name);
                 current = current->next;
@@ -440,12 +441,11 @@ int ShuffleCommand() {
             }
         }
     }
-
     // Display the updated board
-    Display();
+
 
     // Save the shuffled cards to file
-    saveListToFile(head, "../ShuffledCards.txt");
+
 
     return 0;
 }
