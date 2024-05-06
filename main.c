@@ -365,7 +365,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
     struct Node *destination;
     struct Node *fDestination;
     if (inputOne[1] == inputSec[1]){
-        setMessage(0);
+        setMessage(1);
         return;
     }
 
@@ -378,10 +378,10 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                 if (strcmp(Fcurrent->FName, inputSec) == 0) {
                     // Card to move is found in current column
                     if (Fcurrent->visible == 0) {
-                        setMessage(0);
+                        setMessage(1);
                         return;
                     } else if (Fcurrent->next != NULL) {
-                        setMessage(0);
+                        setMessage(1);
                         return;
                     }
                     fDestination = Fcurrent;
@@ -564,45 +564,7 @@ int moveCards(char input[]) {
 }
 
 // TODO Split
-void saveDeck(char input[50]){
-    int i = 3;
-    char filename2[50];
-    while(input[i] != NULL){
-        filename2[i-3] = input[i];
-        i += 1;
-    }
-    if(filename2[0] == 0){
-        strcpy(filename2, "../savedcards/cards.txt");
-    }
 
-
-    FILE *file = fopen(filename2, "w");
-
-    struct Node *destination;
-    struct Node *fDestination;
-    for (int i = 0; i < 7; i++) {
-        struct Node *Fcurrent = columns[i];
-
-        while (Fcurrent != NULL) {
-            fprintf(file, "%s\n", Fcurrent->name);
-            Fcurrent = Fcurrent->next;
-        }
-    }
-
-
-    for (int i = 0; i < 4; i++) {
-        struct Node *current = fcolumns[i];
-
-        while (current != NULL) {
-            fprintf(file, "%s\n", current->name);
-            current = current->next;
-        }
-
-    }
-
-    fclose(file);
-
-}
 
 void GameLoop(char str2[4]) {
     printf("Last Command: %s", str2);
@@ -718,16 +680,31 @@ void shuffleCards(Node **head) {
 
 void saveListToFile(struct Node *head, const char *filename) {
     FILE *file = fopen(filename, "w");
-    if (file == NULL) {
-        fprintf(stderr, "Error opening file for writing.\n");
-        return;
-    }
+
     while (head != NULL) {
         fprintf(file, "%s\n", head->name);
         head = head->next;
     }
 
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        return;
+    }
+
     fclose(file);
+}
+
+void saveDeck(char input[50]){
+    int i = 3;
+    char filename2[50];
+    while(input[i] != NULL){
+        filename2[i-3] = input[i];
+        i += 1;
+    }
+    if(filename2[0] == 0){
+        strcpy(filename2, "../savedcards/cards.txt");
+    }
+    saveListToFile(deck, filename2);
 }
 
 
