@@ -4,7 +4,6 @@
 #include "Terminal.c"
 #include <string.h>
 #include "Flinkedstacks.h"
-#include "Shuffle.c"
 
 
 const int sz = 3;
@@ -79,7 +78,7 @@ struct Node **fInsertSplit() {
             currentFColumn->next = NULL; // Disconnect the current segment from the rest
         }
     }
-
+    setMessage(1);
     return fcolumns;
 }
 
@@ -182,7 +181,7 @@ struct Node **splitLinkedList() {
             currentColumn->next = NULL; // Disconnect the current segment from the rest
         }
     }
-
+    setMessage(1);
     return columns;
 }
 
@@ -225,6 +224,7 @@ int doesCardExists(char inputFileName[50]) {
         finsertStart(&deckInF, "[]", i + 1);
     }
     LoadDisplay(deck);
+    setMessage(1);
     return 0; // Return success
 }
 
@@ -252,7 +252,6 @@ int LinkedListLengthOfF(struct Node *fcolumns) {
 
 
 // Assuming the Node structure and other necessary structures and functions are defined elsewhere - ChatGPT
-
 void PrintSpaces(int count) {
     for (int i = 0; i < count; i++) {
         printf("\t");
@@ -365,7 +364,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
     struct Node *destination;
     struct Node *fDestination;
     if (inputOne[1] == inputSec[1]){
-        setMessage(1);
+        setMessage(0);
         return;
     }
 
@@ -378,10 +377,10 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                 if (strcmp(Fcurrent->FName, inputSec) == 0) {
                     // Card to move is found in current column
                     if (Fcurrent->visible == 0) {
-                        setMessage(1);
+                        setMessage(0);
                         return;
                     } else if (Fcurrent->next != NULL) {
-                        setMessage(1);
+                        setMessage(0);
                         return;
                     }
                     fDestination = Fcurrent;
@@ -398,6 +397,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     // Card to move is found in current column
                     struct Node *cardToMove = current;
                     if (current->visible == 0) {
+                        setMessage(0);
                         return;
                     }
                     // Remove cardToMove from its current position
@@ -449,6 +449,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     // Card to move is found in current column
                     struct Node *cardToMove = current;
                     if (current->visible == 0) {
+                        setMessage(0);
                         return;
                     }
                     // Remove cardToMove from its current position
@@ -464,6 +465,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     if(fDestination->value+1 == cardToMove->value){
                         fDestination->next = cardToMove;
                     }
+                    setMessage(1);
                     return;
                 }
                 previous = current;
@@ -481,8 +483,11 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                 if (strcmp(current->name, inputSec) == 0) {
                     // Card to move is found in current column
                     if (current->visible == 0) {
+                        setMessage(0);
+
                         return;
                     } else if (current->next != NULL) {
+                        setMessage(0);
                         return;
                     }
                     destination = current;
@@ -499,9 +504,11 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     // Card to move is found in current column
                     struct Node *cardToMove = current;
                     if (current->visible == 0) {
+                        setMessage(0);
                         return;
                     }
                     if(destination->value-1 != cardToMove->value){
+                        setMessage(0);
                         return;
                     }
                     // Remove cardToMove from its current position
@@ -515,7 +522,7 @@ void FindCardAndMove(char inputOne[2], char inputSec[2]) {
                     }
 
                     destination->next = cardToMove;
-
+                    setMessage(1);
                     return;
                 }
                 previous = current;
@@ -555,11 +562,12 @@ int moveCards(char input[]) {
         char firstCard[3] = {input[0], input[1]};
         char secCard[3] = {input[4], input[5]};
         FindCardAndMove(firstCard, secCard);
+        setMessage(1);
     } else {
+        setMessage(0);
         return 0;
     }
 
-    setMessage(1);
     return 0;
 }
 
@@ -676,6 +684,7 @@ void shuffleCards(Node **head) {
         strcpy(node->name, node1->name);
         strcpy(node1->name, temp);
     }
+    setMessage(1);
 }
 
 void saveListToFile(struct Node *head, const char *filename) {
@@ -688,10 +697,12 @@ void saveListToFile(struct Node *head, const char *filename) {
 
     if (file == NULL) {
         fprintf(stderr, "Error opening file for writing.\n");
+        setMessage(0);
         return;
     }
 
     fclose(file);
+    setMessage(1);
 }
 
 void saveDeck(char input[50]){
@@ -705,6 +716,7 @@ void saveDeck(char input[50]){
         strcpy(filename2, "../savedcards/cards.txt");
     }
     saveListToFile(deck, filename2);
+    setMessage(1);
 }
 
 
@@ -752,9 +764,8 @@ int ShuffleCommand() {
         setVisibility();
     }
     // Print the cards
-
+    setMessage(1);
     Display();
-
     return 0;
 }
 
