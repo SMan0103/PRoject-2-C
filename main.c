@@ -775,8 +775,8 @@ int ShuffleCommand() {
         setVisibility();
     }
     // Print the cards
-    Display();
 
+    Display();
 
     return 0;
 }
